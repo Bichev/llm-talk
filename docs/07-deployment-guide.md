@@ -62,6 +62,9 @@ SENTRY_DSN=your-sentry-dsn      # Error tracking
 ```typescript
 // Environment validation utility
 const requiredEnvVars = [
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
   'OPENAI_API_KEY',
   'ANTHROPIC_API_KEY', 
   'GOOGLE_API_KEY',
@@ -75,6 +78,197 @@ function validateEnvironment() {
   }
 }
 ```
+
+## Supabase Setup
+
+### Create Supabase Project
+1. **Sign up at [supabase.com](https://supabase.com)**
+2. **Create new project**:
+   - Organization: Create or select existing
+   - Project name: `llm-talk`
+   - Database password: Generate secure password
+   - Region: Choose closest to your users
+   - Pricing plan: Free tier (includes 500MB database)
+
+### Database Schema Setup
+1. **Navigate to SQL Editor in Supabase dashboard**
+2. **Run the following schema creation script**:
+
+```sql
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Sessions table
+CREATE TABLE sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  status TEXT CHECK (status IN ('running', 'completed', 'stopped', 'error')) DEFAULT 'running',
+  
+  -- Configuration
+  config JSONB NOT NULL,
+  topic TEXT NOT NULL,
+  scenario TEXT NOT NULL,
+  max_iterations INTEGER NOT NULL,
+  
+  -- State
+  current_iteration INTEGER DEFAULT 0,
+  total_messages INTEGER DEFAULT 0,
+  started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  completed_at TIMESTAMP WITH TIME ZONE,
+  
+  -- Analytics
+  total_tokens INTEGER DEFAULT 0,
+  efficiency_score DECIMAL(5,4),
+  
+  -- Metadata
+  user_ip INET,
+  user_agent TEXT
+);
+
+-- Participants table
+CREATE TABLE participants (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID REFERENCES sessions(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  provider TEXT NOT NULL,
+  model TEXT NOT NULL,
+  temperature DECIMAL(3,2) NOT NULL,
+  config JSONB,
+  
+  -- Performance metrics
+  total_messages INTEGER DEFAULT 0,
+  total_tokens INTEGER DEFAULT 0,
+  average_response_time INTEGER,
+  efficiency_trend DECIMAL[],
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Messages table
+CREATE TABLE messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID REFERENCES sessions(id) ON DELETE CASCADE,
+  participant_id UUID REFERENCES participants(id) ON DELETE CASCADE,
+  
+  -- Message content
+  iteration INTEGER NOT NULL,
+  original_prompt TEXT,
+  evolved_message TEXT NOT NULL,
+  translation TEXT,
+  
+  -- Metadata
+  token_count JSONB NOT NULL,
+  processing_time INTEGER,
+  timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  -- Evolution tracking
+  evolution_markers TEXT[],
+  efficiency_score DECIMAL(5,4)
+);
+
+-- Analytics snapshots table
+CREATE TABLE analytics_snapshots (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID REFERENCES sessions(id) ON DELETE CASCADE,
+  iteration INTEGER NOT NULL,
+  metrics JSONB NOT NULL,
+  trends JSONB NOT NULL,
+  patterns JSONB NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(session_id, iteration)
+);
+
+-- Indexes for performance
+CREATE INDEX idx_sessions_status ON sessions(status);
+CREATE INDEX idx_sessions_created_at ON sessions(created_at);
+CREATE INDEX idx_sessions_config ON sessions USING GIN(config);
+CREATE INDEX idx_messages_session ON messages(session_id, iteration);
+CREATE INDEX idx_messages_participant ON messages(participant_id);
+CREATE INDEX idx_messages_timestamp ON messages(timestamp);
+
+-- Row Level Security (RLS) - Enable public read access for now
+ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE participants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE analytics_snapshots ENABLE ROW LEVEL SECURITY;
+
+-- Policies for public access (suitable for MVP)
+CREATE POLICY "Allow public read access" ON sessions FOR SELECT USING (true);
+CREATE POLICY "Allow public insert" ON sessions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update" ON sessions FOR UPDATE USING (true);
+
+CREATE POLICY "Allow public read access" ON participants FOR SELECT USING (true);
+CREATE POLICY "Allow public insert" ON participants FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow public read access" ON messages FOR SELECT USING (true);
+CREATE POLICY "Allow public insert" ON messages FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow public read access" ON analytics_snapshots FOR SELECT USING (true);
+CREATE POLICY "Allow public insert" ON analytics_snapshots FOR INSERT WITH CHECK (true);
+
+-- Utility function for adding messages with stats update
+CREATE OR REPLACE FUNCTION add_message_with_stats(
+  p_session_id UUID,
+  p_participant_id UUID,
+  p_iteration INTEGER,
+  p_evolved_message TEXT,
+  p_translation TEXT,
+  p_token_count JSONB,
+  p_processing_time INTEGER
+)
+RETURNS UUID
+LANGUAGE plpgsql
+AS $
+DECLARE
+  message_id UUID;
+  token_total INTEGER;
+BEGIN
+  -- Insert message
+  INSERT INTO messages (
+    session_id, participant_id, iteration, 
+    evolved_message, translation, token_count, processing_time
+  )
+  VALUES (
+    p_session_id, p_participant_id, p_iteration,
+    p_evolved_message, p_translation, p_token_count, p_processing_time
+  )
+  RETURNING id INTO message_id;
+  
+  -- Extract token total
+  token_total := (p_token_count->>'total')::INTEGER;
+  
+  -- Update session stats
+  UPDATE sessions SET
+    current_iteration = p_iteration,
+    total_messages = total_messages + 1,
+    total_tokens = total_tokens + token_total,
+    updated_at = NOW()
+  WHERE id = p_session_id;
+  
+  -- Update participant stats
+  UPDATE participants SET
+    total_messages = total_messages + 1,
+    total_tokens = total_tokens + token_total
+  WHERE id = p_participant_id;
+  
+  RETURN message_id;
+END;
+$;
+```
+
+### Get Supabase Credentials
+1. **Go to Settings → API** in your Supabase dashboard
+2. **Copy the following values**:
+   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
+   - anon/public key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - service_role key → `SUPABASE_SERVICE_ROLE_KEY`
+
+### Enable Real-time (Optional)
+1. **Go to Database → Replication** in Supabase dashboard
+2. **Enable real-time for tables**:
+   - Enable `messages` table for real-time updates
+   - Enable `sessions` table for status updates
 
 ## Local Development
 

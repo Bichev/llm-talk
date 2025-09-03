@@ -50,11 +50,14 @@ llm-talk/
 │   │       │   ├── message/route.ts    # Send message to LLMs
 │   │       │   ├── status/route.ts     # Get session status
 │   │       │   └── stop/route.ts       # Stop session
-│   │       └── providers/
-│   │           ├── openai/route.ts     # OpenAI integration
-│   │           ├── claude/route.ts     # Claude integration
-│   │           ├── gemini/route.ts     # Gemini integration
-│   │           └── perplexity/route.ts # Perplexity integration
+│   │       ├── providers/
+│   │       │   ├── openai/route.ts     # OpenAI integration
+│   │       │   ├── claude/route.ts     # Claude integration
+│   │       │   ├── gemini/route.ts     # Gemini integration
+│   │       │   └── perplexity/route.ts # Perplexity integration
+│   │       └── analytics/
+│   │           ├── session/[id]/route.ts   # Session analytics
+│   │           └── export/[id]/route.ts    # Export session data
 │   ├── components/             # React components
 │   │   ├── ui/                 # Base UI components
 │   │   │   ├── Button.tsx
@@ -67,12 +70,17 @@ llm-talk/
 │   │   ├── MessageCard.tsx     # Individual message display
 │   │   └── SessionControls.tsx # Start/stop controls
 │   ├── lib/                    # Utility functions
+│   │   ├── database/           # Database operations
+│   │   │   ├── operations.ts   # CRUD operations
+│   │   │   ├── migrations.ts   # Schema migrations
+│   │   │   └── realtime.ts     # Real-time subscriptions
 │   │   ├── llm-providers/      # LLM provider integrations
 │   │   │   ├── base.ts         # Base provider interface
 │   │   │   ├── openai.ts       # OpenAI implementation
 │   │   │   ├── claude.ts       # Claude implementation
 │   │   │   ├── gemini.ts       # Gemini implementation
 │   │   │   └── perplexity.ts   # Perplexity implementation
+│   │   ├── supabase.ts         # Supabase client configuration
 │   │   ├── session-manager.ts  # Session state management
 │   │   ├── token-counter.ts    # Token counting utilities
 │   │   ├── prompts.ts          # LLM prompt templates
