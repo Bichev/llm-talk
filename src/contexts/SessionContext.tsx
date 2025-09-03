@@ -209,6 +209,8 @@ export function SessionProvider({ children }: SessionProviderProps) {
     dispatch({ type: 'CLEAR_ERROR' });
 
     try {
+      console.log('📤 Starting session request:', request);
+      
       // Make API call to start session
       const response = await fetch('/api/session/start', {
         method: 'POST',
@@ -218,24 +220,38 @@ export function SessionProvider({ children }: SessionProviderProps) {
         body: JSON.stringify(request),
       });
 
+      console.log('📥 Session start response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Session start error response:', errorData);
         throw new Error(errorData.error || 'Failed to start session');
       }
 
       const data = await response.json();
       const session = data.session;
       
+      console.log('✅ Session started successfully:', {
+        id: session.id,
+        status: session.status,
+        currentIteration: session.currentIteration,
+        maxIterations: session.config.maxIterations,
+        participants: session.participants.map((p: any) => p.name)
+      });
+      
       dispatch({ type: 'SET_SESSION', payload: session });
       
       // Setup real-time subscriptions
       setupRealtimeSubscriptions(session.id);
       
-      console.log('Session started successfully:', session.id);
+      // Auto-send first message to start the conversation
+      console.log('🚀 Auto-starting conversation with first message...');
+      // We'll trigger this from a useEffect instead to avoid dependency issues
+      
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to start session';
+      console.error('❌ Failed to start session:', error);
       dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      console.error('Failed to start session:', error);
     } finally {
       dispatch({ type: 'SET_PROCESSING', payload: false });
     }
@@ -260,6 +276,13 @@ export function SessionProvider({ children }: SessionProviderProps) {
         ...request
       };
 
+      console.log('📤 Sending message request:', {
+        sessionId: state.session.id,
+        currentIteration: state.session.currentIteration,
+        maxIterations: state.session.config.maxIterations,
+        messageRequest
+      });
+
       // Make API call to send message
       const response = await fetch('/api/session/message', {
         method: 'POST',
@@ -269,26 +292,60 @@ export function SessionProvider({ children }: SessionProviderProps) {
         body: JSON.stringify(messageRequest),
       });
 
+      console.log('📥 Send message response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Send message error response:', errorData);
         throw new Error(errorData.error || 'Failed to send message');
       }
 
       const data = await response.json();
       const message = data.message;
       
+      console.log('✅ Message sent successfully:', {
+        id: message.id,
+        speaker: message.speaker,
+        iteration: message.iteration,
+        messageLength: message.evolvedMessage?.length || 0,
+        tokenCount: message.tokenCount
+      });
+      
       // Message will be added via real-time subscription, but we can add it immediately for better UX
       dispatch({ type: 'ADD_MESSAGE', payload: message });
       
-      console.log('Message sent successfully:', message.id);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
+      console.error('❌ Failed to send message:', error);
       dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      console.error('Failed to send message:', error);
     } finally {
       dispatch({ type: 'SET_PROCESSING', payload: false });
     }
   }, [state.session, state.isProcessing]);
+
+  // Auto-send first message when session starts
+  React.useEffect(() => {
+    if (state.session && 
+        state.session.status === 'running' && 
+        state.session.currentIteration === 0 && 
+        state.session.messages.length === 0 &&
+        !state.isProcessing) {
+      
+      console.log('🚀 Auto-triggering first message for new session:', state.session.id);
+      
+      // Small delay to ensure everything is set up
+      const timer = setTimeout(() => {
+        sendMessage().catch(error => {
+          console.error('❌ Failed to auto-send first message:', error);
+        });
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+    
+    // No cleanup needed if condition not met
+    return undefined;
+  }, [state.session?.id, state.session?.status, state.session?.currentIteration, state.session?.messages?.length, state.isProcessing, sendMessage]);
 
   const stopSession = useCallback(async (reason: 'manual' | 'completed' | 'error' | 'timeout' = 'manual') => {
     // Session management now happens via API routes

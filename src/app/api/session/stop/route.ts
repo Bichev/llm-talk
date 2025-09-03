@@ -13,8 +13,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session manager and stop session
+    // Create session manager and load existing session
     const sessionManager = new SessionManager();
+    
+    // Load the session from database first
+    await sessionManager.loadSession(sessionId);
+    
+    // Now stop the session
     await sessionManager.stopSession(reason);
 
     return NextResponse.json({

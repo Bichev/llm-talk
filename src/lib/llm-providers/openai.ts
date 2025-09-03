@@ -210,8 +210,14 @@ export class OpenAIProvider extends AbstractLLMProvider {
       model: config.model || 'gpt-4o-mini',
       temperature: config.temperature ?? 0.7,
       organization: config.organization || process.env.OPENAI_ORG_ID,
-      maxTokens: config.maxTokens
+      maxTokens: config.maxTokens || 4000 // Default to 4000 if not provided
     };
+
+    console.log('🔧 OpenAI Provider Config:', {
+      model: fullConfig.model,
+      temperature: fullConfig.temperature,
+      maxTokens: fullConfig.maxTokens
+    });
 
     return new OpenAIProvider(fullConfig);
   }
@@ -226,6 +232,7 @@ export function createOpenAIProvider(
   return OpenAIProvider.create({
     model,
     temperature,
+    maxTokens: 4000, // Default token limit
     ...options
   });
 }

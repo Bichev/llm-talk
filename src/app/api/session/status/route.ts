@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         scenario: sessionData.scenario,
         maxIterations: sessionData.max_iterations,
         participants: sessionData.participants || [],
-        customPrompt: sessionData.config?.customPrompt
+        customPrompt: (sessionData.config as any)?.customPrompt
       },
       participants: sessionData.participants || [],
       currentIteration: sessionData.current_iteration || 0,

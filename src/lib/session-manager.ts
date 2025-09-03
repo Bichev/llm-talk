@@ -181,7 +181,7 @@ export class SessionManager {
         model: currentSpeaker.model,
         temperature: currentSpeaker.temperature,
         context: this.buildConversationContext(),
-        maxTokens: request.contextLimit
+        maxTokens: request.contextLimit || 4000 // Default to 4000 tokens if not specified
       });
       
       const processingTime = Date.now() - startTime;

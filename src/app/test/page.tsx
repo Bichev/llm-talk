@@ -35,7 +35,10 @@ function TestPageContent() {
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setTestOutput(prev => [...prev, `${timestamp}: ${message}`]);
+    const logMessage = `${timestamp}: ${message}`;
+    setTestOutput(prev => [...prev, logMessage]);
+    // Also log to console for debugging
+    console.log(`🖥️ UI Log: ${logMessage}`);
   };
 
   // Effect to log real-time changes  
