@@ -32,7 +32,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label 
             htmlFor={inputId}
-            className="label-text"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {label}
           </label>
@@ -41,7 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           {leftIcon && (
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-400 text-sm">
+              <span className="text-muted-foreground text-sm">
                 {leftIcon}
               </span>
             </div>
@@ -51,10 +51,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             id={inputId}
             className={cn(
-              'input-field',
+              'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
+              'file:border-0 file:bg-transparent file:text-sm file:font-medium',
+              'placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+              'disabled:cursor-not-allowed disabled:opacity-50',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
-              hasError && 'border-red-300 focus:border-red-500 focus:ring-red-500',
+              hasError && 'border-destructive focus-visible:ring-destructive',
               className
             )}
             ref={ref}
@@ -63,7 +66,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           
           {rightIcon && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <span className="text-gray-400 text-sm">
+              <span className="text-muted-foreground text-sm">
                 {rightIcon}
               </span>
             </div>
@@ -71,13 +74,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
         
         {error && (
-          <p className="error-text" role="alert">
+          <p className="text-sm font-medium text-destructive" role="alert">
             {error}
           </p>
         )}
         
         {helperText && !error && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {helperText}
           </p>
         )}

@@ -9,15 +9,15 @@ export interface BadgeProps
 
 const badgeVariants = {
   variant: {
-    default: 'bg-blue-100 text-blue-800 border-blue-200',
-    secondary: 'bg-gray-100 text-gray-800 border-gray-200',
-    success: 'bg-green-100 text-green-800 border-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    error: 'bg-red-100 text-red-800 border-red-200',
-    outline: 'bg-transparent text-gray-700 border-gray-300'
+    default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+    success: 'bg-green-500 text-white hover:bg-green-500/80',
+    warning: 'bg-yellow-500 text-white hover:bg-yellow-500/80',
+    error: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
+    outline: 'text-foreground border border-input bg-background hover:bg-accent hover:text-accent-foreground'
   },
   size: {
-    sm: 'px-2 py-0.5 text-xs',
+    sm: 'px-2.5 py-0.5 text-xs',
     md: 'px-2.5 py-1 text-sm',
     lg: 'px-3 py-1.5 text-base'
   }
@@ -34,7 +34,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       <div
         ref={ref}
         className={cn(
-          'inline-flex items-center rounded-full border font-medium',
+          'inline-flex items-center rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
           badgeVariants.variant[variant],
           badgeVariants.size[size],
           className

@@ -15,8 +15,7 @@
       "test": "jest",
       "test:watch": "jest --watch",
       "test:coverage": "jest --coverage",
-      "db:types": "supabase gen types typescript --project-id your-project-id --schema public > src/types/database.types.ts",
-      "postbuild": "next-sitemap"
+      "db:types": "supabase gen types typescript --project-id your-project-id --schema public > src/types/database.types.ts"
     },
     "dependencies": {
       "@next/third-parties": "^14.2.0",

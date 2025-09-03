@@ -5,6 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: 'LLM-Talk - AI Communication Evolution',
   description: 'Watch multiple LLMs develop efficient communication protocols in real-time',
   keywords: ['AI', 'LLM', 'communication', 'evolution', 'research'],
@@ -29,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} h-full bg-gray-50 antialiased`}>
+      <body className={`${inter.className} h-full bg-background text-foreground antialiased`}>
         <div className="min-h-full">
           {children}
         </div>

@@ -15,9 +15,9 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const cardVariants = {
   variant: {
-    default: 'card',
-    outline: 'border border-gray-200 bg-transparent',
-    filled: 'bg-gray-50 border border-gray-100'
+    default: 'bg-card text-card-foreground border border-border',
+    outline: 'border border-border bg-transparent',
+    filled: 'bg-muted/50 border border-border'
   },
   padding: {
     none: '',
@@ -38,9 +38,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
+        'rounded-lg shadow-sm',
         cardVariants.variant[variant],
         cardVariants.padding[padding],
-        hover && 'card-hover',
+        hover && 'hover:shadow-md transition-shadow duration-200',
         className
       )}
       {...props}
@@ -66,7 +67,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn(
-        'text-lg font-semibold leading-none tracking-tight text-gray-900',
+        'text-2xl font-semibold leading-none tracking-tight',
         className
       )}
       {...props}
@@ -79,7 +80,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
     <p
       ref={ref}
       className={cn(
-        'text-sm text-gray-600',
+        'text-sm text-muted-foreground',
         className
       )}
       {...props}

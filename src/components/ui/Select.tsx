@@ -37,7 +37,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label 
             htmlFor={selectId}
-            className="label-text"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             {label}
           </label>
@@ -47,9 +47,11 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <select
             id={selectId}
             className={cn(
-              'input-field appearance-none bg-white',
-              'pr-10', // Space for dropdown arrow
-              hasError && 'border-red-300 focus:border-red-500 focus:ring-red-500',
+              'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
+              'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              'appearance-none pr-10', // Space for dropdown arrow
+              hasError && 'border-destructive focus:ring-destructive',
               className
             )}
             ref={ref}
@@ -74,7 +76,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           {/* Custom dropdown arrow */}
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
             <svg
-              className="h-4 w-4 text-gray-400"
+              className="h-4 w-4 text-muted-foreground"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
@@ -90,13 +92,13 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         </div>
         
         {error && (
-          <p className="error-text" role="alert">
+          <p className="text-sm font-medium text-destructive" role="alert">
             {error}
           </p>
         )}
         
         {helperText && !error && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {helperText}
           </p>
         )}

@@ -12,16 +12,16 @@ export interface ButtonProps
 
 const buttonVariants = {
   variant: {
-    primary: 'btn-primary',
-    secondary: 'btn-secondary',
-    danger: 'btn-danger',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+    danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+    ghost: 'hover:bg-accent hover:text-accent-foreground'
   },
   size: {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-6 py-3 text-base'
+    sm: 'h-9 px-3 text-sm',
+    md: 'h-10 px-4 py-2',
+    lg: 'h-11 px-8 text-lg'
   }
 };
 
@@ -41,10 +41,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={cn(
           // Base styles
-          'inline-flex items-center justify-center gap-2 rounded-md font-medium',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          'transition-colors duration-200',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+          'inline-flex items-center justify-center gap-2 rounded-md font-medium ring-offset-background',
+          'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+          'disabled:pointer-events-none disabled:opacity-50',
           // Variant styles
           buttonVariants.variant[variant],
           // Size styles

@@ -207,7 +207,7 @@ export class OpenAIProvider extends AbstractLLMProvider {
   static create(config: Partial<OpenAIConfig>): OpenAIProvider {
     const fullConfig: OpenAIConfig = {
       apiKey: config.apiKey || process.env.OPENAI_API_KEY || '',
-      model: config.model || 'gpt-4o',
+      model: config.model || 'gpt-4o-mini',
       temperature: config.temperature ?? 0.7,
       organization: config.organization || process.env.OPENAI_ORG_ID,
       maxTokens: config.maxTokens
@@ -219,7 +219,7 @@ export class OpenAIProvider extends AbstractLLMProvider {
 
 // Factory function for easy instantiation
 export function createOpenAIProvider(
-  model: OpenAIModel = 'gpt-4o',
+  model: OpenAIModel = 'gpt-4o-mini',
   temperature: number = 0.7,
   options: Partial<OpenAIConfig> = {}
 ): OpenAIProvider {

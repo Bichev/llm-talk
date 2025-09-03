@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable experimental features
+  // Enable experimental features (appDir is now stable in Next.js 14)
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['@supabase/supabase-js']
   },
 
@@ -148,13 +147,7 @@ const nextConfig = {
   // Output configuration for Vercel
   output: 'standalone',
 
-  // API routes configuration
-  api: {
-    bodyParser: {
-      sizeLimit: '1mb',
-    },
-    responseLimit: '8mb',
-  },
+  // Note: API routes configuration is now handled in individual route files
 
   // Server runtime configuration
   serverRuntimeConfig: {
