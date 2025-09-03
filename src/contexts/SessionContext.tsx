@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react';
-import { SessionManager } from '@/lib/session-manager';
+// import { SessionManager } from '@/lib/session-manager'; // Not needed on client side
 import { subscribeToSession, subscribeToMessages } from '@/lib/supabase';
 import type { 
   SessionState, 
@@ -140,13 +140,13 @@ interface SessionProviderProps {
 
 export function SessionProvider({ children }: SessionProviderProps) {
   const [state, dispatch] = useReducer(sessionReducer, initialState);
-  const sessionManagerRef = useRef<SessionManager | null>(null);
+  // const sessionManagerRef = useRef<SessionManager | null>(null); // No longer needed
   const subscriptionsRef = useRef<any[]>([]);
 
-  // Initialize session manager
-  useEffect(() => {
-    sessionManagerRef.current = new SessionManager();
-  }, []);
+  // Session manager is no longer needed on client side - we use API routes instead
+  // useEffect(() => {
+  //   sessionManagerRef.current = new SessionManager();
+  // }, []);
 
   // Cleanup subscriptions on unmount
   useEffect(() => {
@@ -203,15 +203,29 @@ export function SessionProvider({ children }: SessionProviderProps) {
 
   // Actions
   const startSession = useCallback(async (request: StartSessionRequest) => {
-    if (!sessionManagerRef.current) {
-      throw new Error('Session manager not initialized');
-    }
+    // Session management now happens via API routes
 
     dispatch({ type: 'SET_PROCESSING', payload: true });
     dispatch({ type: 'CLEAR_ERROR' });
 
     try {
-      const session = await sessionManagerRef.current.startSession(request);
+      // Make API call to start session
+      const response = await fetch('/api/session/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to start session');
+      }
+
+      const data = await response.json();
+      const session = data.session;
+      
       dispatch({ type: 'SET_SESSION', payload: session });
       
       // Setup real-time subscriptions
@@ -228,7 +242,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
   }, [setupRealtimeSubscriptions]);
 
   const sendMessage = useCallback(async (request: Partial<SendMessageRequest> = {}) => {
-    if (!sessionManagerRef.current || !state.session) {
+    if (!state.session) {
       throw new Error('No active session');
     }
 
@@ -246,7 +260,22 @@ export function SessionProvider({ children }: SessionProviderProps) {
         ...request
       };
 
-      const message = await sessionManagerRef.current.sendMessage(messageRequest);
+      // Make API call to send message
+      const response = await fetch('/api/session/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageRequest),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send message');
+      }
+
+      const data = await response.json();
+      const message = data.message;
       
       // Message will be added via real-time subscription, but we can add it immediately for better UX
       dispatch({ type: 'ADD_MESSAGE', payload: message });
@@ -262,15 +291,29 @@ export function SessionProvider({ children }: SessionProviderProps) {
   }, [state.session, state.isProcessing]);
 
   const stopSession = useCallback(async (reason: 'manual' | 'completed' | 'error' | 'timeout' = 'manual') => {
-    if (!sessionManagerRef.current) {
-      throw new Error('Session manager not initialized');
-    }
+    // Session management now happens via API routes
 
     dispatch({ type: 'SET_PROCESSING', payload: true });
     dispatch({ type: 'CLEAR_ERROR' });
 
     try {
-      await sessionManagerRef.current.stopSession(reason);
+      // Make API call to stop session
+      const response = await fetch('/api/session/stop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionId: state.session?.id,
+          reason
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to stop session');
+      }
+
       dispatch({ type: 'SET_STATUS', payload: reason === 'manual' ? 'stopped' : 'completed' });
       
       // Clean up subscriptions
@@ -288,15 +331,21 @@ export function SessionProvider({ children }: SessionProviderProps) {
   }, []);
 
   const loadSession = useCallback(async (sessionId: string) => {
-    if (!sessionManagerRef.current) {
-      throw new Error('Session manager not initialized');
-    }
-
     dispatch({ type: 'SET_PROCESSING', payload: true });
     dispatch({ type: 'CLEAR_ERROR' });
 
     try {
-      const session = await sessionManagerRef.current.loadSession(sessionId);
+      // Load session via API route
+      const response = await fetch(`/api/session/status?sessionId=${sessionId}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to load session');
+      }
+      
+      const data = await response.json();
+      const session = data.session;
+      
       dispatch({ type: 'SET_SESSION', payload: session });
       
       // Setup real-time subscriptions for loaded session

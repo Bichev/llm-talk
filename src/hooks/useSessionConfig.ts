@@ -96,10 +96,10 @@ export function useSessionConfig() {
     }
 
     // Check for duplicate participant names
-    const participantNames = configToValidate.participants.map(p => p.name.toLowerCase());
+    const participantNames = configToValidate.participants.map(p => p.name.toLowerCase().trim());
     const duplicateNames = participantNames.filter((name, index) => participantNames.indexOf(name) !== index);
     if (duplicateNames.length > 0) {
-      newErrors.participants = `Duplicate participant names: ${duplicateNames.join(', ')}`;
+      newErrors.participants = `Duplicate participant names: ${duplicateNames.join(', ')}. Each participant must have a unique name, even if using the same model.`;
     }
 
     // Validate each participant

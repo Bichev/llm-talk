@@ -34,12 +34,55 @@ function TestPageContent() {
   const [testOutput, setTestOutput] = useState<string[]>([]);
 
   const addLog = (message: string) => {
-    setTestOutput(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
+    const timestamp = new Date().toLocaleTimeString();
+    setTestOutput(prev => [...prev, `${timestamp}: ${message}`]);
   };
+
+  // Effect to log real-time changes  
+  React.useEffect(() => {
+    if (session?.messages) {
+      const messageCount = session.messages.length;
+      if (messageCount > 0) {
+        addLog(`📬 Messages updated - Total: ${messageCount}`);
+        if (session.messages[messageCount - 1]) {
+          const lastMessage = session.messages[messageCount - 1];
+          addLog(`💭 Latest: "${lastMessage.evolvedMessage?.slice(0, 50)}..." by ${lastMessage.speaker}`);
+        }
+      }
+    }
+  }, [session?.messages?.length]);
+
+  // Effect to log status changes
+  React.useEffect(() => {
+    if (status) {
+      addLog(`📊 Status changed to: ${status}`);
+    }
+  }, [status]);
+
+  // Effect to log processing changes
+  React.useEffect(() => {
+    if (isProcessing) {
+      addLog(`⚙️ Processing started...`);
+    } else {
+      addLog(`✅ Processing completed`);
+    }
+  }, [isProcessing]);
+
+  // Effect to sync session state and clear errors
+  React.useEffect(() => {
+    if (session && session.config) {
+      addLog(`🔄 Session state updated: ${session.status}`);
+      addLog(`📊 Current iteration: ${session.currentIteration || 0}/${session.config.maxIterations || 0}`);
+    }
+  }, [session?.status, session?.currentIteration]);
 
   const handleStartSession = async () => {
     try {
-      addLog('Starting session...');
+      addLog('🚀 Starting session...');
+      addLog(`📋 Topic: ${config.topic || 'Test conversation about AI development'}`);
+      addLog(`👥 Participants: ${config.participants.map(p => p.name).join(', ')}`);
+      addLog(`🔄 Max iterations: ${config.maxIterations}`);
+      
       await startSession({
         topic: config.topic || 'Test conversation about AI development',
         scenario: config.scenario,
@@ -47,19 +90,30 @@ function TestPageContent() {
         maxIterations: config.maxIterations,
         customPrompt: config.customPrompt
       });
-      addLog('Session started successfully!');
+      
+      addLog('✅ Session started successfully!');
+      addLog(`🆔 Session ID: ${session?.id || 'Unknown'}`);
+      
+      if (session?.status === 'running') {
+        addLog('🔄 Ready to send messages...');
+      }
     } catch (err) {
-      addLog(`Error starting session: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      addLog(`❌ Error starting session: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
   const handleSendMessage = async () => {
     try {
-      addLog(`Sending message (speaker: ${nextSpeaker})...`);
+      addLog(`💬 Sending message (speaker: ${nextSpeaker})...`);
+      addLog(`📊 Current messages: ${session?.messages?.length || 0}`);
+      addLog(`🎯 Iteration: ${session?.currentIteration || 0}/${session?.config?.maxIterations || 0}`);
+      
       await sendMessage();
-      addLog('Message sent successfully!');
+      
+      addLog('✅ Message sent successfully!');
+      addLog(`📈 Messages count: ${session?.messages?.length || 0}`);
     } catch (err) {
-      addLog(`Error sending message: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      addLog(`❌ Error sending message: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -175,9 +229,14 @@ function TestPageContent() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">Status</p>
-                <Badge variant={status === 'running' ? 'success' : 'secondary'}>
-                  {status}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={status === 'running' ? 'success' : 'secondary'}>
+                    {status}
+                  </Badge>
+                  {isProcessing && (
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Processing..."></div>
+                  )}
+                </div>
               </div>
               
               <div>

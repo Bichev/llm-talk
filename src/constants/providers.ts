@@ -291,16 +291,16 @@ export const ALL_MODELS: ModelInfo[] = [
 // Default model selections for quick start
 export const DEFAULT_PARTICIPANTS = [
   {
-    name: 'GPT-4o-mini',
+    name: 'gpt-4o-mini',
     provider: 'openai' as LLMProvider,
     model: 'gpt-4o-mini',
     temperature: 0.7
   },
   {
-    name: 'GPT-4o-mini',
+    name: 'gpt-4o',
     provider: 'openai' as LLMProvider,
-    model: 'gpt-4o-mini',
-    temperature: 0.7
+    model: 'gpt-4o',
+    temperature: 0.8
   },
   // {
   //   name: 'Claude-3.5',

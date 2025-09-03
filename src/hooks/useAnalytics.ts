@@ -285,7 +285,7 @@ export function useAnalytics() {
       realTimeMetrics: {
         currentIteration: session.currentIteration,
         messagesPerMinute: session.messages.length > 0 
-          ? (session.messages.length / ((Date.now() - session.startedAt.getTime()) / 60000)) 
+          ? (session.messages.length / ((Date.now() - new Date(session.startedAt).getTime()) / 60000)) 
           : 0,
         activeParticipants: session.participants.length,
         systemLoad: 0, // Placeholder
@@ -379,7 +379,7 @@ export function useAnalytics() {
     messageCount: session?.messages.length || 0,
     participantCount: session?.participants.length || 0,
     sessionDuration: session 
-      ? Date.now() - session.startedAt.getTime()
+      ? Date.now() - new Date(session.startedAt).getTime()
       : 0
   };
 }

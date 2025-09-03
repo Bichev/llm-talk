@@ -35,11 +35,14 @@ export class SessionManager {
   private isProcessing = false;
 
   constructor() {
-    this.initializeProviders();
+    // Only initialize providers on server-side
+    if (typeof window === 'undefined') {
+      this.initializeProviders();
+    }
   }
 
   /**
-   * Initialize LLM providers based on available API keys
+   * Initialize LLM providers based on available API keys (server-side only)
    */
   private initializeProviders(): void {
     // Initialize OpenAI provider if API key is available
@@ -318,9 +321,13 @@ export class SessionManager {
       throw new Error('Maximum 5 participants allowed');
     }
 
-    for (const participant of participants) {
-      if (!this.providers.has(participant.provider)) {
-        throw new Error(`Provider ${participant.provider} is not available. Check API key configuration.`);
+    // On client-side, skip provider availability check since providers are only initialized on server
+    // The actual provider validation will happen in the API routes
+    if (typeof window === 'undefined') {
+      for (const participant of participants) {
+        if (!this.providers.has(participant.provider)) {
+          throw new Error(`Provider ${participant.provider} is not available. Check API key configuration.`);
+        }
       }
     }
   }

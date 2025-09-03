@@ -197,12 +197,16 @@ export function validateSupabaseConfig(): void {
   }
 }
 
-// Initialize validation
+// Initialize validation (silent in browser)
 if (typeof window !== 'undefined') {
-  // Only validate in browser environment
+  // Silently validate in browser - don't log unless there's a real issue
   try {
     validateSupabaseConfig();
+    // console.log('✅ Supabase configuration validated successfully');
   } catch (error) {
-    console.error('Supabase configuration error:', error);
+    // Only log actual configuration errors, not missing env vars during SSR
+    if (process.env.NODE_ENV === 'development' && supabaseUrl && supabaseAnonKey) {
+      console.warn('⚠️ Supabase configuration issue:', error);
+    }
   }
 }
