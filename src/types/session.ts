@@ -83,7 +83,7 @@ export interface CommunicationPattern {
 
 export type SessionStatus = 'idle' | 'running' | 'paused' | 'completed' | 'stopped' | 'error';
 
-export type ConversationScenario = 'cooperative' | 'debate' | 'creative' | 'problem-solving';
+export type ConversationScenario = 'protocol-evolution' | 'semantic-compression' | 'symbol-invention' | 'meta-communication';
 
 export type EvolutionMarkerType = 
   | 'symbol_introduction'
@@ -92,7 +92,10 @@ export type EvolutionMarkerType =
   | 'efficiency_decline'
   | 'communication_breakthrough'
   | 'error_correction'
-  | 'adaptation';
+  | 'adaptation'
+  | 'protocol_innovation'
+  | 'compression_achievement'
+  | 'meta_evolution';
 
 // API Request/Response types
 export interface StartSessionRequest {

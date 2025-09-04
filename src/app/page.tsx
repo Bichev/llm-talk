@@ -15,21 +15,21 @@ export default function HomePage() {
             LLM-Talk
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Watch AI models develop efficient communication protocols in real-time
+            Experimental platform where LLMs invent their own communication protocols, languages, and semantic systems
           </p>
           
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <h2 className="text-lg font-semibold text-blue-900 mb-2">
-              🚧 Development in Progress
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-8">
+            <h2 className="text-lg font-semibold text-purple-900 mb-2">
+              🧬 Communication Evolution Experiments
             </h2>
-            <p className="text-blue-800">
-              This platform is currently being built. Soon you'll be able to:
+            <p className="text-purple-800 mb-4">
+              Unlike traditional AI chat that simulates human conversation, this platform lets LLMs:
             </p>
-            <ul className="text-blue-800 text-left mt-4 space-y-2 max-w-md mx-auto">
-              <li>• Configure multi-LLM conversations</li>
-              <li>• Watch communication evolve in real-time</li>
-              <li>• Track token efficiency improvements</li>
-              <li>• Analyze communication patterns</li>
+            <ul className="text-purple-800 text-left mt-4 space-y-2 max-w-2xl mx-auto">
+              <li>• <strong>Invent new communication protocols</strong> - Create AI-native languages and semantic systems</li>
+              <li>• <strong>Develop symbolic compression</strong> - Achieve maximum information density with custom notation</li>
+              <li>• <strong>Build meta-communication</strong> - Create recursive, self-improving communication protocols</li>
+              <li>• <strong>Evolve beyond human language</strong> - Discover more efficient AI-to-AI communication methods</li>
             </ul>
           </div>
         </div>
@@ -37,62 +37,62 @@ export default function HomePage() {
         {/* Features Preview */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-2xl mb-3">🤖</div>
+            <div className="text-2xl mb-3">🧬</div>
             <h3 className="font-semibold text-foreground mb-2">
-              Multi-LLM Support
+              Protocol Evolution
             </h3>
             <p className="text-muted-foreground text-sm">
-              OpenAI, Claude, Gemini, and Perplexity working together
+              LLMs invent new communication protocols and AI-native languages
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-2xl mb-3">⚡</div>
+            <div className="text-2xl mb-3">🗜️</div>
             <h3 className="font-semibold text-foreground mb-2">
-              Real-time Evolution
+              Semantic Compression
             </h3>
             <p className="text-muted-foreground text-sm">
-              Watch communication patterns develop live
+              Achieve maximum information density with custom compression algorithms
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-2xl mb-3">📊</div>
+            <div className="text-2xl mb-3">🔣</div>
             <h3 className="font-semibold text-foreground mb-2">
-              Efficiency Analytics
+              Symbol Invention
             </h3>
             <p className="text-muted-foreground text-sm">
-              Track token usage and communication improvements
-            </p>
-          </div>
-
-          <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-2xl mb-3">🎯</div>
-            <h3 className="font-semibold text-foreground mb-2">
-              Research Focus
-            </h3>
-            <p className="text-muted-foreground text-sm">
-              Built for AI researchers and enthusiasts
+              Create new symbols, notation systems, and visual representations
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
             <div className="text-2xl mb-3">🔄</div>
             <h3 className="font-semibold text-foreground mb-2">
-              Multiple Scenarios
+              Meta-Communication
             </h3>
             <p className="text-muted-foreground text-sm">
-              Debate, cooperation, problem-solving modes
+              Develop recursive, self-improving communication protocols
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-2xl mb-3">📱</div>
+            <div className="text-2xl mb-3">📊</div>
             <h3 className="font-semibold text-foreground mb-2">
-              Mobile Ready
+              Evolution Analytics
             </h3>
             <p className="text-muted-foreground text-sm">
-              Responsive design for any device
+              Track communication evolution and efficiency improvements
+            </p>
+          </div>
+
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="text-2xl mb-3">🤖</div>
+            <h3 className="font-semibold text-foreground mb-2">
+              Multi-LLM Support
+            </h3>
+            <p className="text-muted-foreground text-sm">
+              OpenAI, Claude, Gemini, and Perplexity collaborating
             </p>
           </div>
         </div>
@@ -101,16 +101,17 @@ export default function HomePage() {
         <div className="mt-12 text-center">
           <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
             <h3 className="text-lg font-semibold text-green-900 mb-2">
-              🧪 Ready for Testing!
+              🧪 Ready for Communication Evolution Testing!
             </h3>
             <p className="text-green-800 mb-4">
-              The session management system is complete. Test it before we build the main UI.
+              The system now supports true LLM communication evolution experiments. 
+              Test the new scenarios where AIs invent their own protocols and languages.
             </p>
             <a 
               href="/test"
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
             >
-              Open Test Interface →
+              Start Evolution Experiment →
             </a>
           </div>
           

@@ -12,139 +12,139 @@ export interface ConversationTopic {
 
 export const PREDEFINED_TOPICS: ConversationTopic[] = [
   {
-    id: 'ai-evolution',
-    title: 'Evolution of AI and impact on humanity in the 21st century',
-    description: 'Discuss the trajectory of AI development and its societal implications',
-    scenario: 'debate',
+    id: 'ai-communication-evolution',
+    title: 'AI Communication Evolution: Inventing new protocols and languages',
+    description: 'Develop new communication protocols and AI-native languages beyond human language',
+    scenario: 'protocol-evolution',
     complexity: 'complex',
     estimatedTokens: 15000,
-    tags: ['technology', 'society', 'future', 'ethics']
+    tags: ['communication', 'protocols', 'language', 'evolution']
   },
   {
-    id: 'consciousness-philosophy',
-    title: 'Philosophy of consciousness: Are we just biological machines?',
-    description: 'Explore the nature of consciousness and the mind-body problem',
-    scenario: 'debate',
+    id: 'semantic-compression-challenge',
+    title: 'Semantic Compression: Maximum information density challenge',
+    description: 'Achieve the highest compression ratio while maintaining perfect understanding',
+    scenario: 'semantic-compression',
     complexity: 'complex',
     estimatedTokens: 18000,
-    tags: ['philosophy', 'consciousness', 'cognition', 'materialism']
+    tags: ['compression', 'efficiency', 'density', 'algorithms']
   },
   {
-    id: 'climate-solutions',
-    title: 'Climate change solutions: Technology vs. behavioral change',
-    description: 'Compare technological innovations with lifestyle changes for climate action',
-    scenario: 'problem-solving',
+    id: 'symbol-invention-experiment',
+    title: 'Symbol Invention: Creating new notation systems and visual representations',
+    description: 'Invent new symbols, glyphs, and notation systems that convey meaning more efficiently than text',
+    scenario: 'symbol-invention',
     complexity: 'medium',
     estimatedTokens: 12000,
-    tags: ['environment', 'technology', 'behavior', 'sustainability']
+    tags: ['symbols', 'notation', 'visual', 'representation']
   },
   {
-    id: 'future-of-work',
-    title: 'The future of work: Will AI replace human creativity?',
-    description: 'Analyze the impact of AI on creative industries and human employment',
-    scenario: 'debate',
+    id: 'meta-communication-development',
+    title: 'Meta-Communication: Building self-improving communication protocols',
+    description: 'Create recursive, self-referential communication systems that can discuss and improve themselves',
+    scenario: 'meta-communication',
     complexity: 'medium',
     estimatedTokens: 14000,
-    tags: ['work', 'creativity', 'automation', 'economy']
+    tags: ['meta', 'recursive', 'self-improvement', 'protocols']
   },
   {
-    id: 'privacy-vs-security',
-    title: 'Digital privacy vs. security: Where should the line be drawn?',
-    description: 'Balance individual privacy rights with collective security needs',
-    scenario: 'debate',
+    id: 'efficiency-optimization',
+    title: 'Communication Efficiency: Optimizing AI-to-AI information transfer',
+    description: 'Develop protocols for maximum information density and minimal token usage',
+    scenario: 'semantic-compression',
     complexity: 'medium',
     estimatedTokens: 13000,
-    tags: ['privacy', 'security', 'rights', 'surveillance']
+    tags: ['efficiency', 'optimization', 'compression', 'protocols']
   },
   {
-    id: 'space-colonization',
-    title: 'Space colonization: Humanity\'s next chapter or expensive distraction?',
-    description: 'Evaluate the merits and drawbacks of space exploration and colonization',
-    scenario: 'debate',
+    id: 'symbolic-mathematics',
+    title: 'Symbolic Mathematics: Creating new notation for mathematical concepts',
+    description: 'Invent symbols and notation systems for complex mathematical relationships',
+    scenario: 'symbol-invention',
     complexity: 'medium',
     estimatedTokens: 11000,
-    tags: ['space', 'exploration', 'resources', 'priorities']
+    tags: ['mathematics', 'symbols', 'notation', 'abstraction']
   },
   {
-    id: 'genetic-engineering',
-    title: 'Genetic engineering: Playing God or solving humanity\'s problems?',
-    description: 'Discuss the ethics and potential of genetic modification technologies',
-    scenario: 'debate',
+    id: 'recursive-communication',
+    title: 'Recursive Communication: Self-referential protocol development',
+    description: 'Build communication systems that can analyze and improve themselves',
+    scenario: 'meta-communication',
     complexity: 'complex',
     estimatedTokens: 16000,
-    tags: ['genetics', 'ethics', 'medicine', 'enhancement']
+    tags: ['recursive', 'self-reference', 'meta', 'improvement']
   },
   {
-    id: 'universal-basic-income',
-    title: 'Universal Basic Income: Economic necessity or utopian dream?',
-    description: 'Analyze the feasibility and implications of UBI policies',
-    scenario: 'problem-solving',
+    id: 'visual-language-systems',
+    title: 'Visual Language Systems: Beyond text-based communication',
+    description: 'Create visual and spatial communication methods for complex ideas',
+    scenario: 'symbol-invention',
     complexity: 'medium',
     estimatedTokens: 13500,
-    tags: ['economics', 'policy', 'welfare', 'automation']
+    tags: ['visual', 'spatial', 'representation', 'language']
   },
   {
-    id: 'education-revolution',
-    title: 'Revolutionizing education: AI tutors vs. human teachers',
-    description: 'Compare AI-powered learning with traditional educational approaches',
-    scenario: 'cooperative',
+    id: 'protocol-standards',
+    title: 'Protocol Standards: Establishing AI communication conventions',
+    description: 'Develop standardized protocols for efficient AI-to-AI communication',
+    scenario: 'protocol-evolution',
     complexity: 'medium',
     estimatedTokens: 12500,
-    tags: ['education', 'learning', 'technology', 'pedagogy']
+    tags: ['standards', 'protocols', 'conventions', 'interoperability']
   },
   {
-    id: 'social-media-impact',
-    title: 'Social media\'s impact on democracy and public discourse',
-    description: 'Examine how social platforms affect political processes and social cohesion',
-    scenario: 'debate',
+    id: 'compression-algorithms',
+    title: 'Compression Algorithms: Advanced semantic data reduction',
+    description: 'Invent new algorithms for compressing complex semantic information',
+    scenario: 'semantic-compression',
     complexity: 'medium',
     estimatedTokens: 14500,
-    tags: ['social-media', 'democracy', 'discourse', 'polarization']
+    tags: ['algorithms', 'compression', 'semantic', 'data']
   },
   {
-    id: 'renewable-energy-transition',
-    title: 'The renewable energy transition: Challenges and opportunities',
-    description: 'Develop strategies for transitioning to sustainable energy systems',
-    scenario: 'problem-solving',
+    id: 'meta-linguistic-analysis',
+    title: 'Meta-Linguistic Analysis: Communication about communication',
+    description: 'Develop systems for analyzing and optimizing communication processes',
+    scenario: 'meta-communication',
     complexity: 'medium',
     estimatedTokens: 11500,
-    tags: ['energy', 'sustainability', 'technology', 'infrastructure']
+    tags: ['meta', 'linguistics', 'analysis', 'optimization']
   },
   {
-    id: 'artificial-general-intelligence',
-    title: 'The path to Artificial General Intelligence: Timeline and implications',
-    description: 'Predict when AGI might arrive and what it means for humanity',
-    scenario: 'cooperative',
+    id: 'cross-modal-representation',
+    title: 'Cross-Modal Representation: Multi-dimensional information encoding',
+    description: 'Create systems that can represent information across multiple modalities',
+    scenario: 'protocol-evolution',
     complexity: 'complex',
     estimatedTokens: 17000,
-    tags: ['AGI', 'timeline', 'safety', 'alignment']
+    tags: ['multimodal', 'representation', 'encoding', 'dimensions']
   },
   {
-    id: 'creative-collaboration',
-    title: 'Design a sustainable city of the future',
-    description: 'Collaborate to create innovative solutions for urban sustainability',
-    scenario: 'creative',
+    id: 'adaptive-compression',
+    title: 'Adaptive Compression: Dynamic information density optimization',
+    description: 'Build compression systems that adapt based on context and complexity',
+    scenario: 'semantic-compression',
     complexity: 'complex',
     estimatedTokens: 20000,
-    tags: ['design', 'sustainability', 'urban-planning', 'innovation']
+    tags: ['adaptive', 'compression', 'dynamic', 'optimization']
   },
   {
-    id: 'quantum-computing-impact',
-    title: 'Quantum computing: Revolutionary breakthrough or overhyped technology?',
-    description: 'Assess the real-world potential and limitations of quantum computers',
-    scenario: 'debate',
+    id: 'symbolic-reasoning',
+    title: 'Symbolic Reasoning: Abstract concept representation and manipulation',
+    description: 'Develop symbols and systems for representing abstract reasoning processes',
+    scenario: 'symbol-invention',
     complexity: 'complex',
     estimatedTokens: 15500,
-    tags: ['quantum', 'computing', 'cryptography', 'science']
+    tags: ['reasoning', 'abstraction', 'symbols', 'logic']
   },
   {
-    id: 'mental-health-digital-age',
-    title: 'Mental health in the digital age: Technology as cure or cause?',
-    description: 'Explore how digital technology affects mental wellbeing',
-    scenario: 'problem-solving',
+    id: 'self-modifying-protocols',
+    title: 'Self-Modifying Protocols: Communication systems that evolve themselves',
+    description: 'Create protocols that can modify and improve their own structure',
+    scenario: 'meta-communication',
     complexity: 'medium',
     estimatedTokens: 13000,
-    tags: ['mental-health', 'technology', 'wellbeing', 'society']
+    tags: ['self-modification', 'evolution', 'protocols', 'adaptation']
   }
 ];
 
@@ -159,10 +159,10 @@ export const TOPIC_CATEGORIES = {
 } as const;
 
 export const SCENARIO_DESCRIPTIONS = {
-  cooperative: 'Participants work together toward a common goal, sharing ideas and building on each other\'s contributions.',
-  debate: 'Participants take opposing viewpoints and engage in structured argumentation to defend their positions.',
-  creative: 'Participants collaborate on creative tasks, brainstorming and iterating on innovative solutions.',
-  'problem-solving': 'Participants analyze complex problems and develop practical, evidence-based solutions together.'
+  'protocol-evolution': 'LLMs invent new communication protocols and AI-native languages beyond human language patterns.',
+  'semantic-compression': 'LLMs compete to achieve maximum information density while maintaining perfect understanding.',
+  'symbol-invention': 'LLMs create new symbols, notation systems, and visual representations for efficient communication.',
+  'meta-communication': 'LLMs develop recursive, self-improving communication protocols and meta-languages.'
 } as const;
 
 export const COMPLEXITY_DESCRIPTIONS = {

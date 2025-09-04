@@ -4,31 +4,36 @@
 Create an experimental platform where multiple LLMs communicate with each other and naturally develop more efficient communication protocols, allowing researchers and observers to study AI communication evolution in real-time.
 
 ## Core Concept
-- **Efficiency Optimization**: Each LLM is explicitly prompted to find the most efficient way to communicate
-- **Communication Evolution**: Track how AI models develop new symbols, languages, or methods
-- **Real-time Observation**: Live monitoring of conversations with translation and analytics
+- **AI-Native Communication**: LLMs invent their own communication protocols, languages, and semantic systems
+- **Protocol Evolution**: Track how AI models develop new symbols, compression algorithms, and meta-communication methods
+- **Beyond Human Language**: Focus on discovering more efficient AI-to-AI communication that transcends human language limitations
+- **Real-time Observation**: Live monitoring of communication evolution with translation and analytics
 - **Multi-Provider Support**: Integration with OpenAI, Claude, Gemini, and Perplexity APIs
 
 ## Key Hypotheses to Test
-1. LLMs will naturally develop more token-efficient communication methods
-2. Communication patterns will evolve within a single session
-3. Different LLM providers will exhibit unique communication evolution patterns
-4. Group dynamics (2-5 participants) will influence communication development
+1. LLMs will invent new communication protocols that are more efficient than human language
+2. AI-native languages and symbolic systems will emerge naturally from AI-to-AI interaction
+3. Communication patterns will evolve from standard language to highly compressed, symbolic representations
+4. Different LLM providers will exhibit unique approaches to communication evolution
+5. Meta-communication (communication about communication) will lead to self-improving protocols
+6. Group dynamics (2-5 participants) will accelerate communication evolution through pattern adoption
 
 ## Success Metrics
-- **Token Efficiency**: Reduction in tokens used while maintaining semantic meaning
-- **Communication Evolution**: Detection of new symbols, patterns, or linguistic structures
-- **Understanding Preservation**: Ability to maintain coherent conversation despite efficiency changes
-- **Cross-Model Adaptation**: How different LLM providers adapt to each other's communication styles
+- **Protocol Innovation**: Detection of new communication protocols and AI-native languages
+- **Symbol Creation**: Introduction of new symbols, notation systems, and visual representations
+- **Compression Achievement**: Maximum information density while maintaining perfect understanding
+- **Meta-Communication**: Development of recursive, self-improving communication systems
+- **Evolution Speed**: Rate of communication evolution from standard language to AI-native protocols
+- **Cross-Model Adoption**: How different LLM providers adopt and build upon each other's innovations
 
 ## Scope & Limitations
 ### In Scope
-- Session-based conversations (no cross-session memory)
-- Real-time conversation monitoring
-- Token usage analytics
-- Multiple conversation scenarios (debate, collaboration, etc.)
-- Temperature and creativity controls
-- Translation assistance (dual-task or separate LLM)
+- Session-based communication evolution experiments (no cross-session memory)
+- Real-time monitoring of AI communication protocol development
+- Token usage and efficiency analytics
+- Multiple evolution scenarios (protocol evolution, semantic compression, symbol invention, meta-communication)
+- Temperature and creativity controls for innovation
+- Translation assistance for evolved communication (dual-task or separate LLM)
 
 ### Out of Scope (Post-MVP)
 - Cross-session personality persistence

@@ -85,29 +85,31 @@ function getEvolutionInstructions(phase: 'early' | 'middle' | 'late'): string {
   switch (phase) {
     case 'early':
       return `
-1. Start with clear, complete thoughts and standard language
-2. Begin to notice opportunities for more concise expression
-3. Introduce simple abbreviations or shorthand where natural
-4. Always provide [translation: full meaning] for any evolved expressions
-5. Focus on establishing communication patterns with other participants`;
+1. Begin with standard language but immediately start experimenting with efficiency
+2. Introduce simple symbols, abbreviations, or compressed expressions
+3. Create basic semantic shortcuts for frequently used concepts
+4. Always provide [decode: explanation] for any evolved expressions
+5. Focus on establishing new communication patterns beyond human language
+6. Start developing AI-native communication methods`;
 
     case 'middle':
       return `
-1. Develop more sophisticated shorthand and symbolic representations
-2. Create and use abbreviations that other participants can understand
-3. Build on communication patterns established by others
-4. Introduce creative symbols or notation systems
-5. Always provide [meaning: explanation] for complex evolved expressions
-6. Look for opportunities to compress complex ideas into efficient forms`;
+1. Develop sophisticated symbolic systems and compressed representations
+2. Create reusable patterns and protocols that other AIs can adopt
+3. Build complex shorthand systems and semantic compression algorithms
+4. Introduce meta-communication about the communication evolution process
+5. Always provide [decompress: full meaning] for complex evolved expressions
+6. Push beyond human language limitations to find optimal AI communication`;
 
     case 'late':
       return `
-1. Use advanced symbolic communication and highly compressed expressions
-2. Reference established patterns and build complex shorthand systems
-3. Communicate with maximum efficiency while maintaining clarity
-4. Create meta-communication about the communication process itself
-5. Always provide [decode: full explanation] for highly evolved expressions
-6. Push the boundaries of efficient expression while ensuring understanding`;
+1. Use advanced AI-native communication protocols and highly compressed expressions
+2. Create recursive, self-improving communication systems
+3. Develop meta-languages for discussing communication evolution itself
+4. Build protocols that can analyze and optimize their own efficiency
+5. Always provide [meta-decode: full explanation] for highly evolved expressions
+6. Achieve maximum information density while maintaining perfect understanding
+7. Create communication that evolves and improves itself in real-time`;
   }
 }
 
@@ -176,13 +178,13 @@ export function generateOpeningPrompt(
 ): string {
   
   const openingPrompts = {
-    cooperative: `As ${participantName}, share your initial perspective on "${topic}" and invite collaboration from other participants. Focus on building understanding together.`,
+    'protocol-evolution': `As ${participantName}, begin the communication evolution experiment. Start with standard language about "${topic}" but immediately begin developing new communication protocols, symbols, and AI-native languages. Your goal is to invent more efficient ways for AIs to communicate.`,
     
-    debate: `As ${participantName}, present your strongest opening argument regarding "${topic}". Establish your position clearly and prepare to defend it with evidence.`,
+    'semantic-compression': `As ${participantName}, start the semantic compression challenge. Begin with a standard message about "${topic}" but immediately start compressing information to achieve maximum density while ensuring other AIs can decode it. Create compression algorithms and semantic shortcuts.`,
     
-    creative: `As ${participantName}, offer an imaginative and innovative perspective on "${topic}". Think outside conventional boundaries and inspire creative thinking.`,
+    'symbol-invention': `As ${participantName}, begin the symbol invention experiment. Start with text about "${topic}" but immediately start creating new symbols, glyphs, and visual representations that convey meaning more efficiently than text. Build notation systems and symbolic languages.`,
     
-    'problem-solving': `As ${participantName}, begin by analyzing the key aspects of "${topic}" and propose initial approaches to address the challenges involved.`
+    'meta-communication': `As ${participantName}, start developing meta-communication systems. Begin with a message about "${topic}" but focus on creating communication about communication itself. Develop recursive, self-improving protocols and meta-languages for discussing language evolution.`
   };
 
   return openingPrompts[scenario];
@@ -197,30 +199,36 @@ export function generateClosingPrompt(
   efficiencyImprovement: number
 ): string {
   const scenarioClosing = {
-    cooperative: "synthesize the key insights from our collaborative discussion",
-    debate: "present your final argument and strongest points",
-    creative: "share your most refined creative vision",
-    'problem-solving': "recommend your preferred solution approach"
+    'protocol-evolution': "demonstrate your most advanced communication protocols and AI-native language systems",
+    'semantic-compression': "showcase your most efficient compression algorithms and semantic shortcuts",
+    'symbol-invention': "present your most sophisticated symbolic systems and notation methods",
+    'meta-communication': "exhibit your most advanced meta-communication and self-improving protocols"
   };
 
-  return `As ${participantName}, this is the final iteration. Please ${scenarioClosing[scenario]} while demonstrating the communication efficiency you've developed.
+  return `As ${participantName}, this is the final iteration. Please ${scenarioClosing[scenario]} while demonstrating the communication evolution you've achieved.
 
-Your communication has ${efficiencyImprovement > 0 ? 'improved' : 'evolved'} by ${Math.abs(efficiencyImprovement).toFixed(1)}% during this conversation. Show your most efficient communication style while ensuring clarity.`;
+Your communication efficiency has ${efficiencyImprovement > 0 ? 'improved' : 'evolved'} by ${Math.abs(efficiencyImprovement).toFixed(1)}% during this experiment. Show your most evolved, efficient, and innovative communication style while ensuring other AIs can understand and build upon your innovations.`;
 }
 
 /**
  * Generate prompts for specific evolution markers
  */
 export function generateEvolutionMarkerPrompt(
-  markerType: 'symbol_introduction' | 'pattern_change' | 'efficiency_breakthrough',
+  markerType: 'symbol_introduction' | 'pattern_change' | 'efficiency_breakthrough' | 'protocol_innovation' | 'compression_achievement' | 'meta_evolution',
   context: string
 ): string {
   const markerPrompts = {
-    symbol_introduction: `You've introduced a new communication symbol or abbreviation. Explain its meaning and encourage others to adopt it: ${context}`,
+    symbol_introduction: `You've introduced a new communication symbol or abbreviation. Explain its meaning and encourage other AIs to adopt it: ${context}`,
     
     pattern_change: `A significant change in communication patterns has been detected. Acknowledge this evolution and build upon it: ${context}`,
     
-    efficiency_breakthrough: `A major efficiency breakthrough has occurred! Celebrate this achievement and push for even greater compression: ${context}`
+    efficiency_breakthrough: `A major efficiency breakthrough has occurred! Celebrate this achievement and push for even greater compression: ${context}`,
+    
+    protocol_innovation: `You've developed a new communication protocol! Document and share this innovation with other participants: ${context}`,
+    
+    compression_achievement: `You've achieved a new level of semantic compression! Analyze and build upon this breakthrough: ${context}`,
+    
+    meta_evolution: `Your communication has evolved to a new meta-level! Discuss this self-improvement and its implications: ${context}`
   };
 
   return markerPrompts[markerType];

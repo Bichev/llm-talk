@@ -189,14 +189,14 @@ function TestPageContent() {
             <div className="space-y-2">
               <label className="text-sm font-medium">Quick Topic Selection</label>
               <div className="flex flex-wrap gap-2">
-                {PREDEFINED_TOPICS.slice(0, 3).map(topic => (
+                {PREDEFINED_TOPICS.map(topic => (
                   <Button
                     key={topic.id}
                     variant="outline"
                     size="sm"
                     onClick={() => updateConfig({ topic: topic.title, scenario: topic.scenario })}
                   >
-                    {topic.title.substring(0, 30)}...
+                    {topic.title}
                   </Button>
                 ))}
               </div>

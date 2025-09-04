@@ -14,7 +14,7 @@ export function useSessionConfig() {
   // Configuration state
   const [config, setConfig] = useState<SessionConfig>({
     topic: '',
-    scenario: 'cooperative',
+    scenario: 'protocol-evolution',
     participants: DEFAULT_PARTICIPANTS,
     maxIterations: 20,
     customPrompt: ''
@@ -175,7 +175,7 @@ export function useSessionConfig() {
   const resetConfig = useCallback(() => {
     setConfig({
       topic: '',
-      scenario: 'cooperative',
+      scenario: 'protocol-evolution',
       participants: DEFAULT_PARTICIPANTS,
       maxIterations: 20,
       customPrompt: ''
