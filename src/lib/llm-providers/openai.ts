@@ -24,10 +24,26 @@ export class OpenAIProvider extends AbstractLLMProvider {
     );
 
     this.config = config;
-    this.client = new OpenAI({
+    
+    // Initialize the OpenAI client - explicitly handle organization to avoid env var conflicts
+    const clientConfig: any = {
       apiKey: config.apiKey,
-      organization: config.organization,
+    };
+
+    // IMPORTANT: Only set organization if explicitly provided AND not empty
+    // This prevents automatic reading of OPENAI_ORG_ID from environment
+    if (config.organization && config.organization.trim() !== '') {
+      clientConfig.organization = config.organization;
+    }
+    // If organization is explicitly set to null/undefined, don't include it at all
+
+    console.log('🔧 OpenAI Client Config:', {
+      hasApiKey: !!clientConfig.apiKey,
+      hasOrganization: !!clientConfig.organization,
+      organizationValue: clientConfig.organization || 'none'
     });
+
+    this.client = new OpenAI(clientConfig);
   }
 
   async sendMessage(request: LLMRequest): Promise<LLMResponse> {
@@ -163,6 +179,7 @@ export class OpenAIProvider extends AbstractLLMProvider {
     return (
       super.isAPIKeyError(error) ||
       error?.code === 'invalid_api_key' ||
+      error?.code === 'mismatched_organization' || // Add this!
       error?.type === 'authentication_error'
     );
   }
@@ -209,14 +226,20 @@ export class OpenAIProvider extends AbstractLLMProvider {
       apiKey: config.apiKey || process.env.OPENAI_API_KEY || '',
       model: config.model || 'gpt-4o-mini',
       temperature: config.temperature ?? 0.7,
-      organization: config.organization || process.env.OPENAI_ORG_ID,
-      maxTokens: config.maxTokens || 4000 // Default to 4000 if not provided
+      maxTokens: config.maxTokens || 4000,
+      // CRITICAL: Do not automatically include organization from env
+      // Only include if explicitly provided and not empty
+      ...(config.organization && config.organization.trim() !== '' ? { 
+        organization: config.organization 
+      } : {})
     };
 
     console.log('🔧 OpenAI Provider Config:', {
       model: fullConfig.model,
       temperature: fullConfig.temperature,
-      maxTokens: fullConfig.maxTokens
+      maxTokens: fullConfig.maxTokens,
+      hasOrganization: !!fullConfig.organization,
+      organizationValue: fullConfig.organization || 'none'
     });
 
     return new OpenAIProvider(fullConfig);
@@ -232,7 +255,8 @@ export function createOpenAIProvider(
   return OpenAIProvider.create({
     model,
     temperature,
-    maxTokens: 4000, // Default token limit
+    maxTokens: 4000,
+    // IMPORTANT: Don't pass organization unless explicitly provided
     ...options
   });
 }
