@@ -9,10 +9,12 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { PREDEFINED_TOPICS } from '@/constants/topics';
 import { SCENARIO_CONFIGS } from '@/constants/scenarios';
+import { EvolvedCommunicationRenderer } from '@/components/CommunicationMessageRenderer';
+import { ParticipantSelector } from '@/components/ParticipantSelector';
 import type { ConversationScenario } from '@/types/session';
 
 /**
- * Test page to verify session management functionality
+ * Modern, professional test interface for LLM communication evolution
  */
 function TestPageContent() {
   const { 
@@ -29,15 +31,15 @@ function TestPageContent() {
   } = useSession();
 
   const { config, updateConfig, isValid, errors } = useSessionConfig();
-  const { analyticsData, formatters, hasData } = useAnalytics();
+  const { formatters, hasData } = useAnalytics();
 
   const [testOutput, setTestOutput] = useState<string[]>([]);
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
     const logMessage = `${timestamp}: ${message}`;
     setTestOutput(prev => [...prev, logMessage]);
-    // Also log to console for debugging
     console.log(`🖥️ UI Log: ${logMessage}`);
   };
 
@@ -135,282 +137,309 @@ function TestPageContent() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">
-          LLM-Talk Test Interface
-        </h1>
-        <p className="text-muted-foreground">
-          Test the session management system before building the main UI components.
-        </p>
+    <div className="h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 flex-shrink-0">
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-lg font-bold text-gray-900">
+                🧬 LLM Communication Evolution Lab
+              </h1>
+              <p className="text-xs text-gray-600">
+                Real-time AI communication protocol development
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${status === 'running' ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                <span className="text-xs font-medium text-gray-700">
+                  {status === 'running' ? 'Session Active' : 'Session Inactive'}
+                </span>
+              </div>
+              {session && (
+                <div className="text-xs text-gray-600">
+                  Iteration {session.currentIteration} / {session.config.maxIterations}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Error Display */}
       {error && (
-        <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-          <h3 className="font-semibold text-destructive mb-2">Error</h3>
-          <p className="text-destructive/90">{error}</p>
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mx-4 mt-4 rounded-r-lg">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Session Error</h3>
+              <p className="text-sm text-red-700 mt-1">{error}</p>
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Configuration Panel */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Session Configuration</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              label="Topic"
-              value={config.topic}
-              onChange={(e) => updateConfig({ topic: e.target.value })}
-              placeholder="Enter conversation topic..."
-              error={errors.topic}
-            />
+      <div className="container mx-auto px-4 py-2 flex-1 flex flex-col">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 flex-1">
+          {/* Left Column - Configuration & Controls */}
+          <div className="xl:col-span-1 space-y-3">
+            {/* Session Controls */}
+            <Card className="h-fit">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">🎮 Session Controls</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button
+                  onClick={handleStartSession}
+                  disabled={!isValid || status === 'running' || isProcessing}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs h-8"
+                >
+                  {status === 'running' ? 'Session Active' : 'Start Session'}
+                </Button>
 
-            <Select
-              label="Scenario"
-              value={config.scenario}
-              onChange={(e) => updateConfig({ scenario: e.target.value as ConversationScenario })}
-              options={Object.values(SCENARIO_CONFIGS).map(s => ({
-                value: s.id,
-                label: s.name
-              }))}
-            />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!canSendMessage || isProcessing}
+                  variant="secondary"
+                  className="w-full text-xs h-8"
+                >
+                  {isProcessing ? 'Processing...' : `Send Message (${nextSpeaker})`}
+                </Button>
 
-            <Input
-              label="Max Iterations"
-              type="number"
-              value={config.maxIterations.toString()}
-              onChange={(e) => updateConfig({ maxIterations: parseInt(e.target.value) || 20 })}
-              error={errors.maxIterations}
-            />
+                <Button
+                  onClick={handleStopSession}
+                  disabled={status !== 'running' || isProcessing}
+                  variant="danger"
+                  className="w-full text-xs h-8"
+                >
+                  Stop Session
+                </Button>
+              </CardContent>
+            </Card>
+            
+            
+            {/* Configuration Panel */}
+            <Card className="h-fit">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">⚙️ Configuration</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {/* Participant Selector */}
+                <ParticipantSelector
+                  participants={config.participants}
+                  onParticipantsChange={(participants) => updateConfig({ participants })}
+                  className="mb-4"
+                />
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Quick Topic Selection</label>
-              <div className="flex flex-wrap gap-2">
-                {PREDEFINED_TOPICS.map(topic => (
-                  <Button
-                    key={topic.id}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => updateConfig({ topic: topic.title, scenario: topic.scenario })}
-                  >
-                    {topic.title}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <p className="text-sm text-muted-foreground mb-2">
-                Participants: {config.participants.length} configured
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {config.participants.map((participant, index) => (
-                  <Badge key={index} variant="secondary">
-                    {participant.name} ({participant.provider})
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <Badge variant={isValid ? "success" : "error"}>
-                Configuration {isValid ? 'Valid' : 'Invalid'}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Session Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Session Status</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <div className="flex items-center gap-2">
-                  <Badge variant={status === 'running' ? 'success' : 'secondary'}>
-                    {status}
-                  </Badge>
-                  {isProcessing && (
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Processing..."></div>
-                  )}
-                </div>
-              </div>
-              
-              <div>
-                <p className="text-sm text-muted-foreground">Processing</p>
-                <Badge variant={isProcessing ? 'warning' : 'secondary'}>
-                  {isProcessing ? 'Yes' : 'No'}
-                </Badge>
-              </div>
-
-              {session && (
-                <>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Progress</p>
-                    <p className="font-semibold">{progressPercentage}%</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-sm text-muted-foreground">Messages</p>
-                    <p className="font-semibold">{session.messages.length}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-muted-foreground">Next Speaker</p>
-                    <p className="font-semibold">{nextSpeaker || 'None'}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-muted-foreground">Iteration</p>
-                    <p className="font-semibold">
-                      {session.currentIteration} / {session.config.maxIterations}
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Button
-                onClick={handleStartSession}
-                disabled={!isValid || status === 'running' || isProcessing}
-                className="w-full"
-              >
-                Start Session
-              </Button>
-
-              <Button
-                onClick={handleSendMessage}
-                disabled={!canSendMessage || isProcessing}
-                variant="secondary"
-                className="w-full"
-              >
-                Send Next Message
-              </Button>
-
-              <Button
-                onClick={handleStopSession}
-                disabled={status !== 'running' || isProcessing}
-                variant="danger"
-                className="w-full"
-              >
-                Stop Session
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Analytics Display */}
-        {hasData && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Analytics</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Tokens</p>
-                  <p className="font-semibold">{formatters.totalTokens}</p>
-                </div>
-                
-                <div>
-                  <p className="text-sm text-muted-foreground">Average Tokens</p>
-                  <p className="font-semibold">{formatters.averageTokens}</p>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Topic</label>
+                  <Input
+                    value={config.topic}
+                    onChange={(e) => updateConfig({ topic: e.target.value })}
+                    placeholder="Enter conversation topic..."
+                    error={errors.topic}
+                    className="text-xs h-8"
+                  />
                 </div>
 
                 <div>
-                  <p className="text-sm text-muted-foreground">Estimated Cost</p>
-                  <p className="font-semibold">{formatters.totalCost}</p>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Scenario</label>
+                  <Select
+                    value={config.scenario}
+                    onChange={(e) => updateConfig({ scenario: e.target.value as ConversationScenario })}
+                    options={Object.values(SCENARIO_CONFIGS).map(s => ({
+                      value: s.id,
+                      label: s.name
+                    }))}
+                    className="text-xs h-8"
+                  />
                 </div>
 
                 <div>
-                  <p className="text-sm text-muted-foreground">Efficiency</p>
-                  <p className="font-semibold">{formatters.efficiency}</p>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Max Iterations</label>
+                  <Input
+                    type="number"
+                    value={config.maxIterations.toString()}
+                    onChange={(e) => updateConfig({ maxIterations: parseInt(e.target.value) || 20 })}
+                    error={errors.maxIterations}
+                    className="text-xs h-8"
+                  />
                 </div>
-              </div>
 
-              {analyticsData?.communicationEvolution.symbolsIntroduced && 
-               analyticsData.communicationEvolution.symbolsIntroduced.length > 0 && (
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">Symbols Introduced</p>
-                  <div className="flex flex-wrap gap-1">
-                    {analyticsData.communicationEvolution.symbolsIntroduced.map((symbol, index) => (
-                      <Badge key={index} variant="outline" size="sm">
-                        {symbol.symbol}
-                      </Badge>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Research Topics</label>
+                  <div className="space-y-1">
+                    {PREDEFINED_TOPICS.map(topic => (
+                      <button
+                        key={topic.id}
+                        onClick={() => updateConfig({ topic: topic.title, scenario: topic.scenario })}
+                        className="w-full text-left p-1.5 text-xs bg-gray-50 hover:bg-gray-100 rounded border transition-colors"
+                      >
+                        <div className="font-medium text-gray-900 text-xs">{topic.title}</div>
+                        <div className="text-gray-600 truncate text-xs leading-tight">{topic.description}</div>
+                      </button>
                     ))}
                   </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Messages Display */}
-        {session && session.messages.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Messages</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {session.messages.slice(-5).map((message) => (
-                  <div key={message.id} className="p-3 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="outline" size="sm">
-                        {message.speaker}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        Iteration {message.iteration}
-                      </span>
+
+                <div className="pt-2">
+                  <Badge variant={isValid ? "success" : "error"} className="text-xs">
+                    {isValid ? '✅ Ready' : '❌ Invalid Config'}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            
+
+            {/* Analytics */}
+            {hasData && (
+              <Card className="h-fit">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">📊 Analytics</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-blue-50 p-2 rounded-lg">
+                      <div className="text-blue-600 font-medium text-xs">Total Tokens</div>
+                      <div className="text-sm font-bold text-blue-900">{formatters.totalTokens}</div>
                     </div>
-                    <p className="text-sm mb-2">{message.evolvedMessage}</p>
-                    {message.translation && (
-                      <p className="text-xs text-muted-foreground italic">
-                        Translation: {message.translation}
-                      </p>
-                    )}
-                    <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
-                      <span>Tokens: {message.tokenCount.total}</span>
-                      {message.processingTime && (
-                        <span>Time: {message.processingTime}ms</span>
-                      )}
+                    <div className="bg-green-50 p-2 rounded-lg">
+                      <div className="text-green-600 font-medium text-xs">Efficiency</div>
+                      <div className="text-sm font-bold text-green-900">{formatters.efficiency}</div>
+                    </div>
+                    <div className="bg-purple-50 p-2 rounded-lg">
+                      <div className="text-purple-600 font-medium text-xs">Avg Tokens</div>
+                      <div className="text-sm font-bold text-purple-900">{formatters.averageTokens}</div>
+                    </div>
+                    <div className="bg-orange-50 p-2 rounded-lg">
+                      <div className="text-orange-600 font-medium text-xs">Cost</div>
+                      <div className="text-sm font-bold text-orange-900">{formatters.totalCost}</div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+                </CardContent>
+              </Card>
+              
+            )}
 
-        {/* Test Output Log */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              Test Output
-              <Button onClick={clearLogs} variant="outline" size="sm">
-                Clear
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm max-h-64 overflow-y-auto">
-              {testOutput.length === 0 ? (
-                <p className="text-muted-foreground">No output yet...</p>
-              ) : (
-                testOutput.map((line, index) => (
-                  <div key={index}>{line}</div>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            {/* Test Output Log */}
+            <Card className="h-32 flex-shrink-0">
+              <CardHeader className="pb-1">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm">📋 System Log</CardTitle>
+                  <Button onClick={clearLogs} variant="outline" size="sm" className="text-xs h-6 px-2">
+                    Clear
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-2">
+                <div className="bg-gray-900 text-green-400 p-2 rounded-lg font-mono text-xs h-20 overflow-y-auto">
+                  {testOutput.length === 0 ? (
+                    <p className="text-gray-500">No system activity yet...</p>
+                  ) : (
+                    testOutput.map((line, index) => (
+                      <div key={index} className="mb-0.5">{line}</div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column - Messages & Logs */}
+          <div className="xl:col-span-2 space-y-3 flex flex-col">
+            {/* Messages Display */}
+            <Card className="flex-1 flex flex-col">
+              <CardHeader className="pb-2 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm">💬 Communication Evolution</CardTitle>
+                  {session && (
+                    <div className="flex items-center space-x-2 text-xs text-gray-600">
+                      <span>Progress: {progressPercentage}%</span>
+                      <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                        <div 
+                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300" 
+                          style={{ width: `${progressPercentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-y-auto p-3">
+                {session && session.messages.length > 0 ? (
+                  <div className="space-y-2">
+                    {session.messages.map((message) => (
+                      <div 
+                        key={message.id} 
+                        className={`p-2 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                          selectedMessage?.id === message.id 
+                            ? 'border-blue-500 bg-blue-50' 
+                            : 'border-gray-200 bg-white'
+                        }`}
+                        onClick={() => setSelectedMessage(message)}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="outline" className="text-xs px-1 py-0.5">
+                              {message.speaker}
+                            </Badge>
+                            <span className="text-xs text-gray-500">
+                              Iteration {message.iteration}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-xs text-gray-500">
+                            <span>{message.tokenCount.total} tokens</span>
+                            {message.processingTime && (
+                              <span>{message.processingTime}ms</span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="prose prose-sm max-w-none">
+                          <EvolvedCommunicationRenderer 
+                            content={message.evolvedMessage}
+                            className="text-gray-900 leading-relaxed"
+                          />
+                          {message.translation && (
+                            <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-blue-400">
+                              <div className="flex items-center mb-2">
+                                <div className="text-sm font-medium text-blue-800 flex items-center">
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                  </svg>
+                                  Translation
+                                </div>
+                              </div>
+                              <div className="text-sm text-gray-700 leading-relaxed">
+                                {message.translation}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500">
+                    <div className="text-center">
+                      <div className="text-4xl mb-2">🧬</div>
+                      <p>No messages yet. Start a session to begin communication evolution!</p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            
+          </div>
+        </div>
       </div>
     </div>
   );

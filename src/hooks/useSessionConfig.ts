@@ -15,7 +15,7 @@ export function useSessionConfig() {
   const [config, setConfig] = useState<SessionConfig>({
     topic: '',
     scenario: 'protocol-evolution',
-    participants: DEFAULT_PARTICIPANTS,
+    participants: DEFAULT_PARTICIPANTS, // Start with defaults, can be changed by ParticipantSelector
     maxIterations: 20,
     customPrompt: ''
   });
@@ -176,7 +176,7 @@ export function useSessionConfig() {
     setConfig({
       topic: '',
       scenario: 'protocol-evolution',
-      participants: DEFAULT_PARTICIPANTS,
+      participants: DEFAULT_PARTICIPANTS, // Reset to defaults
       maxIterations: 20,
       customPrompt: ''
     });
