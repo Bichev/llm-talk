@@ -1,23 +1,9 @@
 {
   "version": 2,
   "name": "llm-talk",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
-    }
-  },
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
     }
   },
   "headers": [
@@ -74,12 +60,6 @@
       "source": "/dashboard",
       "destination": "/",
       "permanent": false
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/health",
-      "destination": "/api/health/route"
     }
   ],
   "regions": ["iad1"],

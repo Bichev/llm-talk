@@ -1,4 +1,4 @@
-import type { SessionState, ConversationMessage } from '@/types/session';
+import type { SessionState } from '@/types/session';
 
 export interface DownloadOptions {
   includeMetadata?: boolean;
@@ -71,7 +71,6 @@ export function prepareSessionExport(
   options: DownloadOptions = {}
 ): ConversationExport {
   const {
-    includeMetadata = true,
     includeAnalytics = true,
     includeTranslations = true
   } = options;
@@ -102,7 +101,7 @@ export function prepareSessionExport(
       tokenCount: msg.tokenCount,
       processingTime: msg.processingTime,
       efficiencyScore: msg.efficiencyScore,
-      evolutionMarkers: msg.evolutionMarkers
+      evolutionMarkers: msg.evolutionMarkers?.map(marker => typeof marker === 'string' ? marker : marker.type) || []
     }))
   };
 

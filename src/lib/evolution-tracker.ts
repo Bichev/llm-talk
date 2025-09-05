@@ -58,7 +58,7 @@ export class EvolutionTracker {
   /**
    * Get evolution guidance for the next speaker
    */
-  getEvolutionGuidance(speakerName: string): string {
+  getEvolutionGuidance(_speakerName: string): string {
     const context = this.getEvolutionContext();
     const recentPatterns = context.patterns.slice(-5); // Last 5 patterns
     
@@ -96,7 +96,6 @@ export class EvolutionTracker {
         const [, symbol, meaning] = match.match(/\[([^:\]]+):\s*([^\]]+)\]/) || [];
         if (symbol && meaning) {
           this.addPattern({
-            id: `symbol_${symbol}_${Date.now()}`,
             pattern: symbol,
             type: 'symbol',
             firstUsedBy: message.speaker,
@@ -116,7 +115,6 @@ export class EvolutionTracker {
         const [, abbrev, meaning] = match.match(/\b([A-Z]{2,4}):\s*([^.\n]+)/) || [];
         if (abbrev && meaning) {
           this.addPattern({
-            id: `abbrev_${abbrev}_${Date.now()}`,
             pattern: abbrev,
             type: 'abbreviation',
             firstUsedBy: message.speaker,
@@ -134,7 +132,6 @@ export class EvolutionTracker {
     if (protocolMatches) {
       for (const protocol of protocolMatches) {
         this.addPattern({
-          id: `protocol_${protocol}_${Date.now()}`,
           pattern: protocol,
           type: 'protocol',
           firstUsedBy: message.speaker,
@@ -157,7 +154,8 @@ export class EvolutionTracker {
         existingPattern.variations.push(pattern.pattern);
       }
     } else {
-      this.patterns.set(pattern.id, { ...pattern, id: pattern.id });
+      const id = `${pattern.type}_${pattern.pattern}_${Date.now()}`;
+      this.patterns.set(id, { ...pattern, id });
     }
   }
 
@@ -177,8 +175,8 @@ export class EvolutionTracker {
 
   private assessCommunicationLevel(): 'basic' | 'evolving' | 'advanced' | 'highly-evolved' {
     const totalPatterns = this.patterns.size;
-    const recentMessages = this.messageHistory.slice(-5);
-    const avgPatternsPerMessage = totalPatterns / Math.max(this.messageHistory.length, 1);
+    // const recentMessages = this.messageHistory.slice(-5);
+    // const avgPatternsPerMessage = totalPatterns / Math.max(this.messageHistory.length, 1);
 
     if (totalPatterns === 0) return 'basic';
     if (totalPatterns < 3) return 'evolving';
