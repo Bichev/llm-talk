@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow test pages and API routes
+Disallow: /test
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://llm-talk.vercel.app/sitemap.xml

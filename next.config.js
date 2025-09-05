@@ -2,7 +2,9 @@
 const nextConfig = {
   // Enable experimental features (appDir is now stable in Next.js 14)
   experimental: {
-    serverComponentsExternalPackages: ['@supabase/supabase-js']
+    serverComponentsExternalPackages: ['@supabase/supabase-js'],
+    // Enable SWC minification for better performance
+    swcMinify: true,
   },
 
   // Environment variables exposed to the browser

@@ -35,7 +35,7 @@ export default function HomePage() {
         </div>
 
         {/* Features Preview */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-card border border-border rounded-lg p-6">
             <div className="text-2xl mb-3">🧬</div>
             <h3 className="font-semibold text-foreground mb-2">
@@ -95,7 +95,7 @@ export default function HomePage() {
               OpenAI, Claude, Gemini, and Perplexity collaborating
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* Testing Link */}
         <div className="mt-12 text-center">
@@ -120,6 +120,50 @@ export default function HomePage() {
           </p>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="mt-16 pt-8 border-t border-border">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-sm text-muted-foreground mb-2">
+            Built by <a 
+              href="https://vladbichev.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Vladimir Bichev
+            </a> with ❤️ for the AI research community
+          </p>
+          <div className="flex justify-center space-x-4 text-xs text-muted-foreground">
+            <a 
+              href="https://github.com/Bichev/llm-talk" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              GitHub
+            </a>
+            <span>•</span>
+            <a 
+              href="https://vladbichev.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              Website
+            </a>
+            <span>•</span>
+            <a 
+              href="https://www.linkedin.com/in/bichev/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
