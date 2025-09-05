@@ -17,7 +17,7 @@ export interface Database {
           status: 'running' | 'completed' | 'stopped' | 'error'
           config: Json
           topic: string
-          scenario: 'protocol-evolution' | 'semantic-compression' | 'symbol-invention' | 'meta-communication'
+          scenario: 'protocol-evolution' | 'semantic-compression' | 'symbol-invention' | 'meta-communication' | 'iterative-optimization'
           max_iterations: number
           current_iteration: number
           total_messages: number
@@ -36,7 +36,7 @@ export interface Database {
           status?: 'running' | 'completed' | 'stopped' | 'error'
           config: Json
           topic: string
-          scenario: 'protocol-evolution' | 'semantic-compression' | 'symbol-invention' | 'meta-communication'
+          scenario: 'protocol-evolution' | 'semantic-compression' | 'symbol-invention' | 'meta-communication' | 'iterative-optimization'
           max_iterations: number
           current_iteration?: number
           total_messages?: number

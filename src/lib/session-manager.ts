@@ -1,5 +1,5 @@
 import { createOpenAIProvider } from './llm-providers/openai';
-import { generateConversationPrompt } from './prompts';
+import { generateConversationPrompt, generateIterativeOptimizationPrompt } from './prompts';
 import { analyzeTokenEfficiency } from './token-counter';
 import { EvolutionTracker } from './evolution-tracker';
 import { 
@@ -383,6 +383,17 @@ export class SessionManager {
     };
 
     let prompt = generateConversationPrompt(context);
+
+    // Add special handling for iterative optimization scenario
+    if (this.currentSession.config.scenario === 'iterative-optimization') {
+      const previousOptimizations = this.messageHistory
+        .filter(msg => msg.speaker === speaker.name)
+        .map(msg => msg.evolvedMessage)
+        .slice(-5); // Last 5 optimizations
+      
+      const optimizationPrompt = generateIterativeOptimizationPrompt(context, previousOptimizations);
+      prompt += `\n\n${optimizationPrompt}`;
+    }
 
     // Add evolution guidance if available
     if (this.evolutionTracker) {

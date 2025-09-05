@@ -11,6 +11,7 @@ import { PREDEFINED_TOPICS } from '@/constants/topics';
 import { SCENARIO_CONFIGS } from '@/constants/scenarios';
 import { EvolvedCommunicationRenderer } from '@/components/CommunicationMessageRenderer';
 import { ParticipantSelector } from '@/components/ParticipantSelector';
+import { DownloadButton } from '@/components/DownloadButton';
 import type { ConversationScenario } from '@/types/session';
 
 /**
@@ -357,6 +358,16 @@ function TestPageContent() {
                 >
                   Stop Session
                 </Button>
+
+                {/* Download Section */}
+                <div className="border-t pt-2 mt-2">
+                  <div className="text-xs font-medium text-gray-700 mb-2">Export Conversation</div>
+                  <DownloadButton 
+                    session={session} 
+                    variant="dropdown"
+                    className="w-full"
+                  />
+                </div>
               </CardContent>
             </Card>
             
@@ -511,17 +522,26 @@ function TestPageContent() {
               <CardHeader className="pb-2 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm">💬 Communication Evolution</CardTitle>
-                  {session && (
-                    <div className="flex items-center space-x-2 text-xs text-gray-600">
-                      <span>Progress: {progressPercentage}%</span>
-                      <div className="w-16 bg-gray-200 rounded-full h-1.5">
-                        <div 
-                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300" 
-                          style={{ width: `${progressPercentage}%` }}
-                        ></div>
+                  <div className="flex items-center space-x-3">
+                    {session && (
+                      <div className="flex items-center space-x-2 text-xs text-gray-600">
+                        <span>Progress: {progressPercentage}%</span>
+                        <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                          <div 
+                            className="bg-blue-600 h-1.5 rounded-full transition-all duration-300" 
+                            style={{ width: `${progressPercentage}%` }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                    {session && session.messages.length > 0 && (
+                      <DownloadButton 
+                        session={session} 
+                        variant="dropdown"
+                        className="text-xs"
+                      />
+                    )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto p-2">

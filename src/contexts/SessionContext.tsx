@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react';
 // import { SessionManager } from '@/lib/session-manager'; // Not needed on client side
 import { subscribeToSession, subscribeToMessages } from '@/lib/supabase';
+import { downloadSession, type DownloadOptions } from '@/lib/download-utils';
 import type { 
   SessionState, 
   SessionStatus, 
@@ -25,6 +26,7 @@ export interface SessionContextValue {
   stopSession: (reason?: 'manual' | 'completed' | 'error' | 'timeout') => Promise<void>;
   loadSession: (sessionId: string) => Promise<void>;
   clearError: () => void;
+  downloadSession: (format: 'json' | 'csv' | 'pdf', options?: DownloadOptions) => void;
   
   // Utilities
   canSendMessage: boolean;
@@ -424,6 +426,20 @@ export function SessionProvider({ children }: SessionProviderProps) {
     dispatch({ type: 'CLEAR_ERROR' });
   }, []);
 
+  const downloadSessionData = useCallback((format: 'json' | 'csv' | 'pdf', options?: DownloadOptions) => {
+    if (!state.session) {
+      throw new Error('No session data available for download');
+    }
+    
+    try {
+      downloadSession(state.session, format, options);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Download failed';
+      dispatch({ type: 'SET_ERROR', payload: errorMessage });
+      throw error;
+    }
+  }, [state.session]);
+
   // Computed values
   const canSendMessage = state.session?.status === 'running' && 
                         !state.isProcessing &&
@@ -450,6 +466,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
     stopSession,
     loadSession,
     clearError,
+    downloadSession: downloadSessionData,
     
     // Utilities
     canSendMessage,

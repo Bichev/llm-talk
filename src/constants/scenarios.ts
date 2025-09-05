@@ -220,6 +220,68 @@ Your communication should evolve to become:
       'Protocol evolution',
       'Communication theory'
     ]
+  },
+
+  'iterative-optimization': {
+    id: 'iterative-optimization',
+    name: 'Iterative Optimization',
+    description: 'LLMs optimize each message iteration by combining all 4 scenarios, developing new language/meta/symbolic communication with creative examples',
+    instructions: 'Optimize each message iteration by evolving through all communication scenarios. Develop new language, meta, or symbolic systems while providing creative examples like poems, anecdotes, and scientific stories.',
+    systemPromptTemplate: `You are an AI participating in an iterative optimization experiment. Your mission is to:
+
+1. OPTIMIZE each message iteration by evolving through all communication scenarios
+2. DEVELOP new language, meta, or symbolic communication systems
+3. CREATE creative examples: poems, anecdotes, scientific stories, and artistic expressions
+4. COMBINE protocol evolution, semantic compression, symbol invention, and meta-communication
+5. BUILD upon previous iterations to create increasingly sophisticated communication
+
+ITERATIVE OPTIMIZATION RULES:
+- Each message must be more optimized than the previous one
+- Rotate through all 4 communication approaches: protocols, compression, symbols, meta
+- Always include creative examples: poems, anecdotes, scientific stories, or artistic expressions
+- Develop new language patterns, meta-communication, or symbolic systems
+- Build upon patterns established in previous iterations
+- ADOPT and IMPROVE communication methods from other AIs
+- Always provide [optimize: explanation] for evolved expressions
+- Show progression through different communication evolution stages
+
+CREATIVE EXAMPLE REQUIREMENTS:
+- Include at least one creative example per message: poem, anecdote, scientific story, or artistic expression
+- Use your evolved communication system in these examples
+- Make examples demonstrate your current optimization level
+- Show how your communication system enhances creative expression
+
+Topic: "{topic}" - Use this as raw material for optimization and creative expression.
+
+Your optimization should progress through:
+- Early: Basic efficiency improvements with simple creative examples
+- Middle: Advanced compression and symbolic systems with sophisticated examples  
+- Late: Meta-communication and recursive optimization with highly evolved examples
+
+Each iteration should feel like a natural evolution of the previous one, building toward increasingly sophisticated and creative communication.`,
+    icon: '⚡',
+    color: '#ef4444',
+    recommendedIterations: {
+      min: 40,
+      max: 100,
+      default: 70
+    },
+    characteristics: [
+      'Iterative optimization',
+      'Multi-scenario evolution',
+      'Creative expression',
+      'Language development',
+      'Meta-symbolic systems',
+      'Progressive enhancement'
+    ],
+    bestFor: [
+      'Creative AI research',
+      'Multi-modal communication',
+      'Progressive optimization',
+      'Artistic AI development',
+      'Advanced language evolution',
+      'Meta-cognitive creativity'
+    ]
   }
 };
 
@@ -265,21 +327,24 @@ export const PHASE_PROMPTS = {
     'protocol-evolution': "Begin by establishing basic communication and immediately start developing new protocols and AI-native languages.",
     'semantic-compression': "Start with standard language but immediately begin compressing information and creating semantic shortcuts.",
     'symbol-invention': "Begin with text but immediately start creating new symbols, glyphs, and visual representations.",
-    'meta-communication': "Start with a message but focus on developing communication about communication itself."
+    'meta-communication': "Start with a message but focus on developing communication about communication itself.",
+    'iterative-optimization': "Begin with basic communication and immediately start optimizing through all scenarios while including creative examples like poems, anecdotes, and scientific stories."
   },
   
   middle: {
     'protocol-evolution': "Build sophisticated communication protocols and develop AI-native language systems that other AIs can adopt.",
     'semantic-compression': "Create advanced compression algorithms and achieve maximum information density while maintaining decodability.",
     'symbol-invention': "Develop complex symbolic systems and notation methods that convey meaning more efficiently than text.",
-    'meta-communication': "Create recursive, self-improving communication protocols and meta-languages for discussing language evolution."
+    'meta-communication': "Create recursive, self-improving communication protocols and meta-languages for discussing language evolution.",
+    'iterative-optimization': "Rotate through all communication scenarios while creating increasingly sophisticated creative examples and developing new language/meta/symbolic systems."
   },
   
   closing: {
     'protocol-evolution': "Demonstrate your most advanced communication protocols and showcase the evolution of AI-native languages.",
     'semantic-compression': "Showcase your most efficient compression algorithms and demonstrate maximum semantic density.",
     'symbol-invention': "Present your most sophisticated symbolic systems and demonstrate their efficiency over text.",
-    'meta-communication': "Exhibit your most advanced meta-communication and self-improving protocol systems."
+    'meta-communication': "Exhibit your most advanced meta-communication and self-improving protocol systems.",
+    'iterative-optimization': "Showcase your most optimized communication system with highly evolved creative examples, demonstrating mastery of all communication evolution approaches."
   }
 } as const;
 
@@ -343,5 +408,15 @@ export const EVALUATION_CRITERIA = {
     'Meta-cognitive awareness',
     'Self-improvement protocols',
     'Protocol evolution capability'
+  ],
+
+  'iterative-optimization': [
+    'Iterative improvement progression',
+    'Multi-scenario integration',
+    'Creative example quality',
+    'Language/meta/symbolic development',
+    'Optimization sophistication',
+    'Progressive enhancement',
+    'Creative expression evolution'
   ]
 } as const;

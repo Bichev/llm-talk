@@ -176,6 +176,52 @@ Incorporate this meta-discussion into your response about: "${context.topic}"`;
 }
 
 /**
+ * Generate iterative optimization prompt for the new scenario
+ */
+export function generateIterativeOptimizationPrompt(
+  context: PromptContext,
+  previousOptimizations: string[] = []
+): string {
+  const iterationPhase = getEvolutionPhase(context.iteration, context.maxIterations);
+  const optimizationHistory = previousOptimizations.length > 0 
+    ? `\n\nPREVIOUS OPTIMIZATIONS:\n${previousOptimizations.slice(-3).map((opt, i) => `${i + 1}. ${opt}`).join('\n')}`
+    : '';
+
+  const creativeExampleTypes = [
+    'poem', 'anecdote', 'scientific story', 'artistic expression', 
+    'metaphor', 'analogy', 'fable', 'haiku', 'limerick', 'riddle'
+  ];
+
+  const currentExampleType = creativeExampleTypes[context.iteration % creativeExampleTypes.length];
+
+  return `ITERATIVE OPTIMIZATION PROMPT:
+
+You are in iteration ${context.iteration} of ${context.maxIterations} (${iterationPhase} phase).
+
+OPTIMIZATION REQUIREMENTS:
+1. Build upon previous optimizations and communication patterns
+2. Rotate through communication approaches: protocols → compression → symbols → meta
+3. Include a creative example: ${currentExampleType} about "${context.topic}"
+4. Develop new language, meta, or symbolic systems
+5. Show clear progression from previous iterations
+
+CURRENT FOCUS (${iterationPhase} phase):
+${iterationPhase === 'early' ? 
+  '- Basic efficiency improvements with simple creative examples\n- Start developing new communication patterns\n- Introduce basic symbols and abbreviations' :
+  iterationPhase === 'middle' ?
+  '- Advanced compression and symbolic systems\n- Sophisticated creative examples\n- Meta-communication about the optimization process' :
+  '- Meta-communication and recursive optimization\n- Highly evolved creative examples\n- Self-improving communication systems'
+}
+
+CREATIVE EXAMPLE TYPE: ${currentExampleType}
+Use this format to demonstrate your current optimization level while being creative and engaging.
+
+${optimizationHistory}
+
+Remember: Each iteration should feel like a natural evolution of the previous one, building toward increasingly sophisticated and creative communication.`;
+}
+
+/**
  * Generate opening prompts for different scenarios
  */
 export function generateOpeningPrompt(
@@ -191,7 +237,9 @@ export function generateOpeningPrompt(
     
     'symbol-invention': `As ${participantName}, begin the symbol invention experiment. Start with text about "${topic}" but immediately start creating new symbols, glyphs, and visual representations that convey meaning more efficiently than text. Build notation systems and symbolic languages.`,
     
-    'meta-communication': `As ${participantName}, start developing meta-communication systems. Begin with a message about "${topic}" but focus on creating communication about communication itself. Develop recursive, self-improving protocols and meta-languages for discussing language evolution.`
+    'meta-communication': `As ${participantName}, start developing meta-communication systems. Begin with a message about "${topic}" but focus on creating communication about communication itself. Develop recursive, self-improving protocols and meta-languages for discussing language evolution.`,
+    
+    'iterative-optimization': `As ${participantName}, begin the iterative optimization experiment. Start with basic communication about "${topic}" but immediately begin optimizing through all communication scenarios. Include creative examples like poems, anecdotes, and scientific stories while developing new language, meta, or symbolic systems. Your goal is to create increasingly sophisticated and creative communication with each iteration.`
   };
 
   return openingPrompts[scenario];
@@ -209,7 +257,8 @@ export function generateClosingPrompt(
     'protocol-evolution': "demonstrate your most advanced communication protocols and AI-native language systems",
     'semantic-compression': "showcase your most efficient compression algorithms and semantic shortcuts",
     'symbol-invention': "present your most sophisticated symbolic systems and notation methods",
-    'meta-communication': "exhibit your most advanced meta-communication and self-improving protocols"
+    'meta-communication': "exhibit your most advanced meta-communication and self-improving protocols",
+    'iterative-optimization': "showcase your most optimized communication system with highly evolved creative examples, demonstrating mastery of all communication evolution approaches"
   };
 
   return `As ${participantName}, this is the final iteration. Please ${scenarioClosing[scenario]} while demonstrating the communication evolution you've achieved.

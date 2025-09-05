@@ -166,15 +166,24 @@ export function EvolvedCommunicationRenderer({ content, className = '' }: Commun
       // Handle decompress sections (must come before general symbol pattern)
       .replace(/\[decompress:\s*([^\]]+)\]/gi, 
         '<div class="decompress-section text-xs bg-orange-50 p-2 rounded border-l-4 border-orange-400 mb-2"><strong class="text-orange-800">Decompress:</strong> <span class="text-gray-700">$1</span></div>')
+      // Handle optimize sections for iterative optimization scenario
+      .replace(/\[optimize:\s*([^\]]+)\]/gi, 
+        '<div class="optimize-section text-xs bg-red-50 p-2 rounded border-l-4 border-red-400 mb-2"><strong class="text-red-800">Optimize:</strong> <span class="text-gray-700">$1</span></div>')
       // Handle compression ratios
       .replace(/(\d+\.?\d*)\s*(words?\s*=\s*\d+\.?\d*\s*meanings?)/gi, 
         '<span class="compression-ratio inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-mono mx-1">$1 $2</span>')
       // Handle efficiency metrics
       .replace(/(\d+%)\s*(improvement|efficiency)/gi, 
         '<span class="efficiency-metric inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-mono mx-1">$1 $2</span>')
-      // Handle symbol patterns like [symbol: meaning] or [⊕: Understanding] (but not decode/decompress)
-      .replace(/\[(?!decode:|decompress:)([^\]]+):\s*([^\]]+)\]/g, 
-        '<span class="symbol-pattern inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-mono mx-1 border border-purple-200"><span class="font-bold">$1</span>: <span class="text-gray-700">$2</span></span>');
+      // Handle symbol patterns like [symbol: meaning] or [⊕: Understanding] (but not decode/decompress/optimize)
+      .replace(/\[(?!decode:|decompress:|optimize:)([^\]]+):\s*([^\]]+)\]/g, 
+        '<span class="symbol-pattern inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-mono mx-1 border border-purple-200"><span class="font-bold">$1</span>: <span class="text-gray-700">$2</span></span>')
+      // Handle creative example markers for iterative optimization
+      .replace(/(POEM|ANECDOTE|SCIENTIFIC STORY|ARTISTIC EXPRESSION|METAPHOR|ANALOGY|FABLE|HAIKU|LIMERICK|RIDDLE):\s*/gi, 
+        '<div class="creative-example-header text-sm font-bold text-indigo-800 bg-indigo-50 px-3 py-1 rounded-t border-b border-indigo-200 mt-3 mb-1">$1:</div>')
+      // Handle creative example content
+      .replace(/(<div class="creative-example-header[^>]*>.*?<\/div>)(.*?)(?=<div class="creative-example-header|$)/g, 
+        '$1<div class="creative-example-content bg-indigo-25 p-3 rounded-b border border-indigo-200 mb-3 italic text-gray-700">$2</div>');
 
     // Wrap list items in ul tags
     processed = processed.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
