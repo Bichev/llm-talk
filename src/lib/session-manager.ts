@@ -1,6 +1,7 @@
 import { createOpenAIProvider } from './llm-providers/openai';
 import { generateConversationPrompt } from './prompts';
 import { analyzeTokenEfficiency } from './token-counter';
+import { EvolutionTracker } from './evolution-tracker';
 import { 
   createSession, 
   createParticipants, 
@@ -33,6 +34,7 @@ export class SessionManager {
   private providers: Map<string, any> = new Map();
   private messageHistory: ConversationMessage[] = [];
   private isProcessing = false;
+  private evolutionTracker: EvolutionTracker | null = null;
 
   constructor() {
     // Only initialize providers on server-side
@@ -133,6 +135,10 @@ export class SessionManager {
       };
 
       this.messageHistory = [];
+      
+      // Initialize evolution tracker for new session
+      this.evolutionTracker = new EvolutionTracker();
+      
       console.log(`Session started: ${this.currentSession.id}`);
       
       return this.currentSession;
@@ -202,6 +208,11 @@ export class SessionManager {
         evolutionMarkers: this.detectEvolutionMarkers(llmResponse.content, nextIteration) as any,
         efficiencyScore: this.calculateEfficiencyScore(llmResponse.tokenCount.total, nextIteration)
       };
+
+      // Update evolution tracker with new message
+      if (this.evolutionTracker) {
+        this.evolutionTracker.addMessage(message);
+      }
 
       // Save message to database
       const messageId = await addMessage(
@@ -301,6 +312,9 @@ export class SessionManager {
 
       this.messageHistory = [...this.currentSession.messages];
       
+      // Initialize evolution tracker with existing messages
+      this.evolutionTracker = new EvolutionTracker(this.messageHistory);
+      
       return this.currentSession;
     } catch (error) {
       console.error('Failed to load session:', error);
@@ -368,7 +382,15 @@ export class SessionManager {
       customPrompt: this.currentSession.config.customPrompt
     };
 
-    return generateConversationPrompt(context);
+    let prompt = generateConversationPrompt(context);
+
+    // Add evolution guidance if available
+    if (this.evolutionTracker) {
+      const evolutionGuidance = this.evolutionTracker.getEvolutionGuidance(speaker.name);
+      prompt += `\n\nEVOLUTION GUIDANCE:\n${evolutionGuidance}`;
+    }
+
+    return prompt;
   }
 
   private getProviderForParticipant(participant: LLMParticipant): any {
@@ -385,10 +407,27 @@ export class SessionManager {
     // Add recent messages as context (last 10 messages)
     const recentMessages = this.messageHistory.slice(-10);
     
+    // Add evolution context if available
+    if (this.evolutionTracker) {
+      const evolutionContext = this.evolutionTracker.getEvolutionContext();
+      if (evolutionContext.patterns.length > 0) {
+        const recentPatterns = evolutionContext.patterns.slice(-3);
+        const patternSummary = recentPatterns
+          .map(p => `${p.pattern} (${p.meaning}) - used by ${p.firstUsedBy}`)
+          .join(', ');
+        
+        context.push({
+          role: 'system',
+          content: `ESTABLISHED COMMUNICATION PATTERNS: ${patternSummary}`
+        });
+      }
+    }
+    
     for (const msg of recentMessages) {
+      // Create a more natural conversation flow where each LLM sees the others as distinct speakers
       context.push({
-        role: 'assistant',
-        content: `${msg.speaker}: ${msg.evolvedMessage}`
+        role: 'user', // Treat other LLMs as "users" speaking to the current LLM
+        content: `[${msg.speaker}]: ${msg.evolvedMessage}${msg.translation ? `\n[Translation: ${msg.translation}]` : ''}`
       });
     }
 

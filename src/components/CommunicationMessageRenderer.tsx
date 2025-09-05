@@ -18,27 +18,27 @@ export function CommunicationMessageRenderer({ content, className = '' }: Commun
         components={{
           // Custom styling for different markdown elements
           h1: ({ children }) => (
-            <h1 className="text-xl font-bold text-gray-900 mb-3 border-b border-gray-200 pb-2">
+            <h1 className="text-lg font-bold text-gray-900 mb-2 border-b border-gray-200 pb-1">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-lg font-semibold text-gray-800 mb-2 mt-4">
+            <h2 className="text-base font-semibold text-gray-800 mb-1 mt-2">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-base font-medium text-gray-700 mb-2 mt-3">
+            <h3 className="text-sm font-medium text-gray-700 mb-1 mt-2">
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="text-sm font-medium text-gray-600 mb-1 mt-2">
+            <h4 className="text-xs font-medium text-gray-600 mb-1 mt-1">
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p className="text-gray-800 leading-relaxed mb-3">
+            <p className="text-gray-800 leading-tight mb-2 text-sm">
               {children}
             </p>
           ),
@@ -68,33 +68,33 @@ export function CommunicationMessageRenderer({ content, className = '' }: Commun
             );
           },
           pre: ({ children }) => (
-            <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4 border">
+            <pre className="bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto mb-3 border text-sm">
               {children}
             </pre>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc list-inside mb-3 space-y-1 text-gray-800">
+            <ul className="list-disc list-inside mb-2 space-y-0.5 text-gray-800 text-sm">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-inside mb-3 space-y-1 text-gray-800">
+            <ol className="list-decimal list-inside mb-2 space-y-0.5 text-gray-800 text-sm">
               {children}
             </ol>
           ),
           li: ({ children }) => (
-            <li className="text-gray-800 leading-relaxed">
+            <li className="text-gray-800 leading-tight text-sm">
               {children}
             </li>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-blue-400 pl-4 py-2 bg-blue-50 mb-3 italic text-gray-700">
+            <blockquote className="border-l-4 border-blue-400 pl-3 py-1 bg-blue-50 mb-2 italic text-gray-700 text-sm">
               {children}
             </blockquote>
           ),
           table: ({ children }) => (
-            <div className="overflow-x-auto mb-4">
-              <table className="min-w-full border border-gray-300 rounded-lg">
+            <div className="overflow-x-auto mb-3">
+              <table className="min-w-full border border-gray-300 rounded text-sm">
                 {children}
               </table>
             </div>
@@ -115,12 +115,12 @@ export function CommunicationMessageRenderer({ content, className = '' }: Commun
             </tr>
           ),
           th: ({ children }) => (
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">
+            <th className="px-3 py-1 text-left font-semibold text-gray-700 text-xs">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="px-4 py-2 text-gray-800">
+            <td className="px-3 py-1 text-gray-800 text-xs">
               {children}
             </td>
           ),
@@ -128,7 +128,7 @@ export function CommunicationMessageRenderer({ content, className = '' }: Commun
           span: ({ children, className }) => {
             if (className?.includes('symbol')) {
               return (
-                <span className="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm font-mono mx-1">
+                <span className="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm font-mono mx-1 border border-purple-200">
                   {children}
                 </span>
               );
@@ -160,18 +160,21 @@ export function EvolvedCommunicationRenderer({ content, className = '' }: Commun
       .replace(/`(.*?)`/g, '<code>$1</code>')
       // Handle lists
       .replace(/^- (.*$)/gm, '<li>$1</li>')
-      // Handle decode sections
+      // Handle decode sections (must come before general symbol pattern)
       .replace(/\[decode:\s*([^\]]+)\]/gi, 
-        '<div class="decode-section"><strong>Decode:</strong> $1</div>')
-      // Handle decompress sections
+        '<div class="decode-section text-xs bg-green-50 p-2 rounded border-l-4 border-green-400 mb-2"><strong class="text-green-800">Decode:</strong> <span class="text-gray-700">$1</span></div>')
+      // Handle decompress sections (must come before general symbol pattern)
       .replace(/\[decompress:\s*([^\]]+)\]/gi, 
-        '<div class="decompress-section"><strong>Decompress:</strong> $1</div>')
+        '<div class="decompress-section text-xs bg-orange-50 p-2 rounded border-l-4 border-orange-400 mb-2"><strong class="text-orange-800">Decompress:</strong> <span class="text-gray-700">$1</span></div>')
       // Handle compression ratios
       .replace(/(\d+\.?\d*)\s*(words?\s*=\s*\d+\.?\d*\s*meanings?)/gi, 
-        '<span class="compression-ratio">$1 $2</span>')
+        '<span class="compression-ratio inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-mono mx-1">$1 $2</span>')
       // Handle efficiency metrics
       .replace(/(\d+%)\s*(improvement|efficiency)/gi, 
-        '<span class="efficiency-metric">$1 $2</span>');
+        '<span class="efficiency-metric inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-mono mx-1">$1 $2</span>')
+      // Handle symbol patterns like [symbol: meaning] or [⊕: Understanding] (but not decode/decompress)
+      .replace(/\[(?!decode:|decompress:)([^\]]+):\s*([^\]]+)\]/g, 
+        '<span class="symbol-pattern inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-mono mx-1 border border-purple-200"><span class="font-bold">$1</span>: <span class="text-gray-700">$2</span></span>');
 
     // Wrap list items in ul tags
     processed = processed.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
@@ -188,6 +191,7 @@ export function EvolvedCommunicationRenderer({ content, className = '' }: Commun
   return (
     <div className={`evolved-communication ${className}`}>
       <div 
+        className="text-sm leading-tight"
         dangerouslySetInnerHTML={{ 
           __html: processContent(content)
         }} 

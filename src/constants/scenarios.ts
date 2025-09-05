@@ -36,8 +36,10 @@ COMMUNICATION EVOLUTION RULES:
 - Create new symbols, abbreviations, and semantic structures
 - Develop meta-communication about the communication process itself
 - Build on patterns established by other participants
+- ADOPT and IMPROVE upon communication patterns used by other AIs
 - Always provide [decode: explanation] for evolved expressions
 - Focus on maximum information density and efficiency
+- Show you understand and can use the evolved communication system
 
 Your goal is not to simulate human conversation, but to discover new forms of AI communication that are more efficient, expressive, and powerful than human language. Be creative, experimental, and push boundaries.
 
@@ -83,8 +85,10 @@ COMPRESSION CHALLENGE RULES:
 - Create reusable compression patterns and symbols
 - Develop meta-compression (compressing the compression methods)
 - Build on successful compression patterns from others
+- ADOPT and IMPROVE compression methods used by other AIs
 - Always provide [decompress: full meaning] for complex compressions
 - Track compression ratios and efficiency metrics
+- Show you understand and can use the evolved compression system
 
 Topic: "{topic}" - Use this as raw material to compress and optimize.
 
@@ -130,8 +134,10 @@ SYMBOL INVENTION RULES:
 - Develop systematic approaches to symbol creation
 - Build symbol libraries and reference systems
 - Create symbols for abstract concepts and relationships
+- ADOPT and IMPROVE symbols created by other AIs
 - Always provide [symbol-key: meaning] for new symbols
 - Encourage adoption and evolution of your symbols
+- Show you understand and can use the evolved symbolic system
 
 Topic: "{topic}" - Use this as a domain for symbol creation and representation.
 
@@ -181,8 +187,10 @@ META-COMMUNICATION RULES:
 - Create recursive definitions and self-referential systems
 - Develop protocols for protocol development
 - Build feedback loops for communication improvement
+- ADOPT and IMPROVE meta-communication patterns from other AIs
 - Always provide [meta: explanation] for meta-communication
 - Focus on self-awareness and self-improvement in communication
+- Show you understand and can use the evolved meta-communication system
 
 Topic: "{topic}" - Use this as a starting point, but focus on how you communicate about it.
 

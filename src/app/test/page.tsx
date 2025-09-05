@@ -524,20 +524,20 @@ function TestPageContent() {
                   )}
                 </div>
               </CardHeader>
-              <CardContent className="flex-1 overflow-y-auto p-3">
+              <CardContent className="flex-1 overflow-y-auto p-2">
                 {session && session.messages.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {session.messages.map((message) => (
                       <div 
                         key={message.id} 
-                        className={`p-2 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                        className={`p-2 rounded border cursor-pointer transition-all hover:shadow-sm ${
                           selectedMessage?.id === message.id 
                             ? 'border-blue-500 bg-blue-50' 
                             : 'border-gray-200 bg-white'
                         }`}
                         onClick={() => setSelectedMessage(message)}
                       >
-                        <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-start justify-between mb-1">
                           <div className="flex items-center space-x-2">
                             <Badge variant="outline" className="text-xs px-1 py-0.5">
                               {message.speaker}
@@ -557,19 +557,19 @@ function TestPageContent() {
                         <div className="prose prose-sm max-w-none">
                           <EvolvedCommunicationRenderer 
                             content={message.evolvedMessage}
-                            className="text-gray-900 leading-relaxed"
+                            className="text-gray-900 leading-tight text-sm"
                           />
                           {message.translation && (
-                            <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-blue-400">
-                              <div className="flex items-center mb-2">
-                                <div className="text-sm font-medium text-blue-800 flex items-center">
-                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="mt-2 p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded border-l-4 border-blue-400">
+                              <div className="flex items-center mb-1">
+                                <div className="text-xs font-medium text-blue-800 flex items-center">
+                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                   </svg>
                                   Translation
                                 </div>
                               </div>
-                              <div className="text-sm text-gray-700 leading-relaxed">
+                              <div className="text-xs text-gray-700 leading-tight">
                                 {message.translation}
                               </div>
                             </div>

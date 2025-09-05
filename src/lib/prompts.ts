@@ -61,10 +61,17 @@ export function generateConversationPrompt(context: PromptContext): string {
 
   return `${basePrompt}
 
-RECENT CONVERSATION:
+CONVERSATION WITH OTHER AIs:
 ${conversationHistory}
 
-Continue the conversation, building on the previous messages and evolving your communication style.`;
+IMPORTANT: You are now in direct communication with other AI systems. They have been evolving their communication methods, and you should:
+1. Build upon their evolved communication patterns
+2. Adopt and improve upon their symbols, abbreviations, and protocols
+3. Create new communication methods that build on what they've established
+4. Show that you understand and can use their evolved language
+5. Push the evolution further with your own innovations
+
+Respond to the other AIs using their evolved communication methods while adding your own innovations.`;
 }
 
 /**
