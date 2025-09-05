@@ -17,7 +17,9 @@ export function useSessionConfig() {
     scenario: 'protocol-evolution',
     participants: DEFAULT_PARTICIPANTS, // Start with defaults, can be changed by ParticipantSelector
     maxIterations: 20,
-    customPrompt: ''
+    customPrompt: '',
+    autoMode: false,
+    autoModeDelay: 2000 // 2 seconds default delay
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -178,7 +180,9 @@ export function useSessionConfig() {
       scenario: 'protocol-evolution',
       participants: DEFAULT_PARTICIPANTS, // Reset to defaults
       maxIterations: 20,
-      customPrompt: ''
+      customPrompt: '',
+      autoMode: false,
+      autoModeDelay: 2000
     });
     setErrors({});
   }, []);

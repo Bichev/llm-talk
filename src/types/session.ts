@@ -6,6 +6,8 @@ export interface SessionConfig {
   participants: LLMParticipant[];
   maxIterations: number;
   customPrompt?: string;
+  autoMode?: boolean;
+  autoModeDelay?: number; // Delay between messages in milliseconds
 }
 
 export interface SessionState {

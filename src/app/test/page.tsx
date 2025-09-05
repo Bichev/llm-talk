@@ -35,6 +35,22 @@ function TestPageContent() {
 
   const [testOutput, setTestOutput] = useState<string[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
+  const [autoModeActive, setAutoModeActive] = useState(false);
+  const [autoModeInterval, setAutoModeInterval] = useState<NodeJS.Timeout | null>(null);
+  const [isAutoModeProcessing, setIsAutoModeProcessing] = useState(false);
+  
+  // Use refs to track auto mode state for the recursive function
+  const autoModeActiveRef = React.useRef(false);
+  const isAutoModeProcessingRef = React.useRef(false);
+  
+  // Update refs when state changes
+  React.useEffect(() => {
+    autoModeActiveRef.current = autoModeActive;
+  }, [autoModeActive]);
+  
+  React.useEffect(() => {
+    isAutoModeProcessingRef.current = isAutoModeProcessing;
+  }, [isAutoModeProcessing]);
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -127,10 +143,113 @@ function TestPageContent() {
       addLog('Stopping session...');
       await stopSession('manual');
       addLog('Session stopped successfully!');
+      // Stop auto mode when session stops
+      if (autoModeActive) {
+        handleToggleAutoMode();
+      }
     } catch (err) {
       addLog(`Error stopping session: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
+
+  // Auto mode functions - using useRef to avoid recreation issues
+  const sendNextMessageRef = React.useRef<() => Promise<void>>();
+  
+  sendNextMessageRef.current = async () => {
+    addLog(`🤖 Auto mode: sendNextMessage called - active: ${autoModeActiveRef.current}, processing: ${isAutoModeProcessingRef.current}`);
+    
+    // Check if we should continue using refs for current values
+    if (!autoModeActiveRef.current || isAutoModeProcessingRef.current) {
+      addLog('🤖 Auto mode: Skipping - not active or already processing');
+      return; // Auto mode was stopped or already processing
+    }
+    
+    addLog(`🤖 Auto mode: Session check - session: ${!!session}, iteration: ${session?.currentIteration}, max: ${session?.config?.maxIterations}`);
+    
+    if (!session || session.currentIteration >= session.config.maxIterations) {
+      handleToggleAutoMode();
+      addLog('🏁 Auto mode completed - max iterations reached');
+      return;
+    }
+    
+    addLog(`🤖 Auto mode: Status check - status: ${status}, canSendMessage: ${canSendMessage}`);
+    
+    if (status !== 'running' || !canSendMessage) {
+      handleToggleAutoMode();
+      addLog('⏸️ Auto mode stopped - session not ready');
+      return;
+    }
+    
+    // Send message and wait for completion
+    try {
+      setIsAutoModeProcessing(true);
+      addLog(`🤖 Auto mode: Sending message ${session.currentIteration + 1}/${session.config.maxIterations}`);
+      await handleSendMessage();
+      addLog(`🤖 Auto mode: Message sent successfully, waiting ${config.autoModeDelay || 2000}ms`);
+      
+      // Wait for the configured delay before sending the next message
+      if (autoModeActiveRef.current) {
+        setTimeout(() => {
+          setIsAutoModeProcessing(false);
+          addLog('🤖 Auto mode: Delay completed, scheduling next message');
+          // Use the ref to call the function recursively
+          if (sendNextMessageRef.current) {
+            sendNextMessageRef.current();
+          }
+        }, config.autoModeDelay || 2000);
+      } else {
+        setIsAutoModeProcessing(false);
+        addLog('🤖 Auto mode: Auto mode stopped during delay');
+      }
+    } catch (err) {
+      setIsAutoModeProcessing(false);
+      addLog(`❌ Auto mode error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      handleToggleAutoMode();
+    }
+  };
+
+  const handleToggleAutoMode = () => {
+    addLog(`🤖 Toggle auto mode called - current state: ${autoModeActive}`);
+    
+    if (autoModeActive) {
+      // Stop auto mode
+      if (autoModeInterval) {
+        clearInterval(autoModeInterval);
+        setAutoModeInterval(null);
+      }
+      setAutoModeActive(false);
+      setIsAutoModeProcessing(false);
+      addLog('⏸️ Auto mode stopped');
+    } else {
+      // Start auto mode
+      addLog(`🤖 Starting auto mode - status: ${status}, canSendMessage: ${canSendMessage}`);
+      
+      if (status === 'running' && canSendMessage) {
+        setAutoModeActive(true);
+        addLog(`🤖 Auto mode started (delay: ${config.autoModeDelay || 2000}ms)`);
+        
+        // Start the first message after a short delay
+        addLog('🤖 Scheduling first message in 1000ms');
+        setTimeout(() => {
+          addLog('🤖 First message timeout triggered');
+          if (sendNextMessageRef.current) {
+            sendNextMessageRef.current();
+          }
+        }, 1000);
+      } else {
+        addLog('❌ Cannot start auto mode - session not ready');
+      }
+    }
+  };
+
+  // Cleanup auto mode on unmount
+  React.useEffect(() => {
+    return () => {
+      if (autoModeInterval) {
+        clearInterval(autoModeInterval);
+      }
+    };
+  }, [autoModeInterval]);
 
   const clearLogs = () => {
     setTestOutput([]);
@@ -204,12 +323,31 @@ function TestPageContent() {
 
                 <Button
                   onClick={handleSendMessage}
-                  disabled={!canSendMessage || isProcessing}
+                  disabled={!canSendMessage || isProcessing || autoModeActive}
                   variant="secondary"
                   className="w-full text-xs h-8"
                 >
                   {isProcessing ? 'Processing...' : `Send Message (${nextSpeaker})`}
                 </Button>
+
+                <Button
+                  onClick={handleToggleAutoMode}
+                  disabled={!canSendMessage || isProcessing || isAutoModeProcessing}
+                  variant={autoModeActive ? "danger" : "secondary"}
+                  className={`w-full text-xs h-8 ${autoModeActive ? 'bg-orange-600 hover:bg-orange-700 text-white' : ''}`}
+                >
+                  {autoModeActive ? '⏸️ Stop Auto Mode' : '🤖 Start Auto Mode'}
+                </Button>
+
+                {autoModeActive && (
+                  <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border border-orange-200">
+                    <div className="font-medium">
+                      Auto Mode Active {isAutoModeProcessing && '(Processing...)'}
+                    </div>
+                    <div>Delay: {config.autoModeDelay || 2000}ms</div>
+                    <div>Iteration: {session?.currentIteration || 0}/{session?.config?.maxIterations || 0}</div>
+                  </div>
+                )}
 
                 <Button
                   onClick={handleStopSession}
@@ -269,6 +407,20 @@ function TestPageContent() {
                     error={errors.maxIterations}
                     className="text-xs h-8"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Auto Mode Delay (ms)</label>
+                  <Input
+                    type="number"
+                    value={config.autoModeDelay?.toString() || '2000'}
+                    onChange={(e) => updateConfig({ autoModeDelay: parseInt(e.target.value) || 2000 })}
+                    className="text-xs h-8"
+                    placeholder="2000"
+                  />
+                  <div className="text-xs text-gray-500 mt-1">
+                    Delay between auto messages (1000-10000ms)
+                  </div>
                 </div>
 
                 <div>
